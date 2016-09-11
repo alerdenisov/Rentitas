@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Entitas;
 
 namespace Rentitas
 {
-    public class GroupObserver
+    public class GroupObserver<T> where T : class, IComponent
     {
 
         /// Returns all collected entities. Call observer.ClearCollectedEntities() once you processed all entities.
-        public HashSet<Entity> collectedEntities => _collectedEntities;
+        public HashSet<Entity<T>> collectedEntities => _collectedEntities;
 
-        private readonly HashSet<Entity>        _collectedEntities;
-        private readonly Group[]                _groups;
+        private readonly HashSet<Entity<T>>        _collectedEntities;
+        private readonly Group<T>[]                _groups;
         private readonly GroupEventType[]       _eventTypes;
-        private readonly Group.GroupChanged     _addEntityCache;
+        private readonly Group<T>.GroupChanged     _addEntityCache;
         private string                          _toStringCache;
 
         /// Creates a GroupObserver and will collect changed entities based on the specified eventType.
-        public GroupObserver(Group group, GroupEventType eventType)
+        public GroupObserver(Group<T> group, GroupEventType eventType)
             : this(new[] { group }, new[] { eventType })
         {
         }
 
         /// Creates a GroupObserver and will collect changed entities based on the specified eventTypes.
-        public GroupObserver(Group[] groups, GroupEventType[] eventTypes)
+        public GroupObserver(Group<T>[] groups, GroupEventType[] eventTypes)
         {
             _groups = groups;
-            _collectedEntities = new HashSet<Entity>(EntityEqualityComparer.Comparer);
+            _collectedEntities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
             _eventTypes = eventTypes;
 
             if (groups.Length != eventTypes.Length)
@@ -91,7 +90,7 @@ namespace Rentitas
             _collectedEntities.Clear();
         }
 
-        void AddEntity(Group group, Entity entity, Type type, IComponent component)
+        void AddEntity(Group<T> group, Entity<T> entity, Type type, T component)
         {
             var added = _collectedEntities.Add(entity);
             if (added) entity.Retain(this);

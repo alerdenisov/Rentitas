@@ -5,7 +5,7 @@ namespace Rentitas
     public interface IMatcher
     {
         Type[] Types { get; }
-        bool Matches(Entity entity);
+        bool Matches(IEntity entity);
     }
 
     public interface ICompoundMatcher : IMatcher

@@ -2,15 +2,15 @@
 
 namespace Rentitas
 {
-    public partial class Entity
+    public partial class Entity<T> where T : class, IComponent
     {
         public readonly HashSet<object> owners = new HashSet<object>();
 
-        public Entity Retain(object owner)
+        public Entity<T> Retain(object owner)
         {
             if (!owners.Add(owner))
             {
-                throw new EntityIsAlreadyRetainedByOwnerException(this, owner);
+                throw new EntityIsAlreadyRetainedByOwnerException<T>(this, owner);
             }
 
             _toStringCache = null;
@@ -22,7 +22,7 @@ namespace Rentitas
         {
             if (!owners.Remove(owner))
             {
-                throw new EntityIsNotRetainedByOwnerException(this, owner);
+                throw new EntityIsNotRetainedByOwnerException<T>(this, owner);
             }
 
             if (owners.Count == 0)

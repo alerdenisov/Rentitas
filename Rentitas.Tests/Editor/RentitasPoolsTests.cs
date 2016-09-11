@@ -4,15 +4,23 @@ using NUnit.Framework;
 
 namespace Rentitas.Tests
 {
-    public class TestComponentA : IComponent { }
-    public class TestComponentB : IComponent { }
-    public class TestComponentC : IComponent { }
+    public interface ITestPool : IComponent { }
+    public interface ITestSecondPool : IComponent { }
+
+    public class TestComponentA : ITestPool { }
+    public class TestComponentB : ITestPool { }
+    public class TestComponentC : ITestPool { }
+
+    public class TestNameComponent : ITestSecondPool
+    {
+        public string Name;
+    }
 
     public class Pools
     {
-        private Pool TestPool(int creationIndex = 0)
+        private Pool<ITestPool> TestPool(int creationIndex = 0)
         {
-            return new Pool(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
+            return new Pool<ITestPool>(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
         [Test]
@@ -38,7 +46,7 @@ namespace Rentitas.Tests
         [Test]
         public void entity_creates()
         {
-            Assert.IsInstanceOf<Entity>(TestPool().CreateEntity());
+            Assert.IsInstanceOf<Entity<ITestPool>>(TestPool().CreateEntity());
         }
 
         [Test]
@@ -69,7 +77,7 @@ namespace Rentitas.Tests
             var pool = TestPool();
             var e = pool.CreateEntity();
             pool.DestroyEntity(e);
-            Assert.Throws<PoolDoesNotContainEntityException>(() =>
+            Assert.Throws<PoolDoesNotContainEntityException<ITestPool>>(() =>
                 pool.DestroyEntity(e));
         }
 
@@ -205,7 +213,7 @@ namespace Rentitas.Tests
             var e1 = p.CreateEntity().Add<TestComponentC>();
             e1.Retain(this);
 
-            Assert.Throws<PoolStillHasRetainedEntitiesException>(() => p.DestroyAllEntities());
+            Assert.Throws<PoolStillHasRetainedEntitiesException<ITestPool>>(() => p.DestroyAllEntities());
         }
 
         [Test]
@@ -258,7 +266,7 @@ namespace Rentitas.Tests
         public void dispatches_OnEntityCreated_when_creating_entity()
         {
             var did = 0;
-            Entity eventEntity = null;
+            Entity<ITestPool> eventEntity = null;
             var pool = TestPool();
             pool.OnEntityCreated += (p, e) =>
             {
@@ -351,14 +359,14 @@ namespace Rentitas.Tests
             var pool = TestPool();
             var entity = pool.CreateEntity();
 
-            Assert.Throws<EntityIsNotDestroyedException>(() => { entity.Release(pool); });
+            Assert.Throws<EntityIsNotDestroyedException<ITestPool>>(() => { entity.Release(pool); });
 
         }
 
         [Test]
         public void dispatched_OnGroupCreated_when_creating_a_new_group()
         {
-            Group eg = null;
+            Group<ITestPool> eg = null;
             var did = 0;
             var pool = TestPool();
 
@@ -388,7 +396,7 @@ namespace Rentitas.Tests
         [Test]
         public void dispatch_OnGroupCleared_when_clearing_groups()
         {
-            Group eg = null;
+            Group<ITestPool> eg = null;
             var did = 0;
             var pool = TestPool();
             pool.OnGroupCleared += (p, g) =>
@@ -407,17 +415,11 @@ namespace Rentitas.Tests
             Assert.AreSame(eg, group2);
         }
 
-        public class ET : Entitas.IComponent
-        {
-            
-        }
-
         [Test]
         public void removes_all_delegates_when_destroying_entity()
         {
             var pool = TestPool();
             var entity = pool.CreateEntity();
-            entity.Add<TestComponentA>();
 
             entity.OnComponentAdded += delegate { Assert.Fail(" On Component Added fires"); };
             entity.OnComponentRemoved += delegate { Assert.Fail("On Component Removed fires"); };
@@ -535,9 +537,9 @@ namespace Rentitas.Tests
 
             p1.DestroyEntity(e1);
 
-            Assert.Throws<EntityIsNotEnabledException>(() => e1.Add<TestComponentA>());
-            Assert.Throws<EntityIsNotEnabledException>(() => e1.Remove<TestComponentA>());
-            Assert.Throws<EntityIsNotEnabledException>(() => e1.Add<TestComponentA>());
+            Assert.Throws<EntityIsNotEnabledException<ITestPool>>(() => e1.Add<TestComponentA>());
+            Assert.Throws<EntityIsNotEnabledException<ITestPool>>(() => e1.Remove<TestComponentA>());
+            Assert.Throws<EntityIsNotEnabledException<ITestPool>>(() => e1.Add<TestComponentA>());
         }
     }
 }

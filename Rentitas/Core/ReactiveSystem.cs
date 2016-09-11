@@ -2,45 +2,53 @@
 
 namespace Rentitas
 {
+    public interface IReactiveIntermalSystem
+    {
+        ISystem InternalSubsystem { get; }
+        void Activate();
+        void Deactivate();
+        void Clear();
+    }
     /// A ReactiveSystem manages your implementation of a IReactiveSystem, IMultiReactiveSystem or IGroupObserverSystem subsystem.
     /// It will only call subsystem.Execute() if there were changes based on the Triggers and eventTypes specified by your subsystem
     /// and will only pass in changed entities. A common use-case is to react to changes,
     /// e.g. a change of the position of an entity to update the gameObject.transform.position of the related gameObject.
     /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
     /// This will automatically wrap MySystem in a ReactiveSystem if it implements IReactiveSystem, IMultiReactiveSystem or IGroupObserverSystem.
-    public class ReactiveSystem : IExecuteSystem
+    public class ReactiveSystem<T> : IReactiveIntermalSystem, IExecuteSystem where T : class, IComponent
     {
 
         /// Returns the subsystem which will be managed by this instance of ReactiveSystem.
-        public IReactiveExecuteSystem Subsystem => _subsystem;
+        public IReactiveExecuteSystem<T> Subsystem => _subsystem;
+        public ISystem InternalSubsystem => Subsystem;
 
-        private readonly IReactiveExecuteSystem         _subsystem;
-        private readonly GroupObserver                  _observer;
+        private readonly IReactiveExecuteSystem<T>      _subsystem;
+        private readonly GroupObserver<T>               _observer;
         private readonly IMatcher                       _ensureComponents;
         private readonly IMatcher                       _excludeComponents;
         private readonly bool                           _clearAfterExecute;
-        private readonly List<Entity>                   _buffer;
+        private readonly List<Entity<T>>                _buffer;
         private string                                  _toStringCache;
 
         /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
-        public ReactiveSystem(Pool pool, IReactiveSystem subSystem) :
+        public ReactiveSystem(Pool<T> pool, IReactiveSystem<T> subSystem) :
             this(subSystem, CreateGroupObserver(pool, new[] { subSystem.Trigger }))
         {
         }
 
         /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
-        public ReactiveSystem(Pool pool, IMultiReactiveSystem subSystem) :
+        public ReactiveSystem(Pool<T> pool, IMultiReactiveSystem<T> subSystem) :
             this(subSystem, CreateGroupObserver(pool, subSystem.Triggers))
         {
         }
 
         /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
-        public ReactiveSystem(IGroupObserverSystem subSystem) :
+        public ReactiveSystem(IGroupObserverSystem<T> subSystem) :
             this(subSystem, subSystem.GroupObserver)
         {
         }
 
-        ReactiveSystem(IReactiveExecuteSystem subSystem, GroupObserver groupObserver)
+        ReactiveSystem(IReactiveExecuteSystem<T> subSystem, GroupObserver<T> groupObserver)
         {
             _subsystem = subSystem;
             var ensureComponents = subSystem as IEnsureComponents;
@@ -57,13 +65,13 @@ namespace Rentitas
             _clearAfterExecute = (subSystem as IClearReactiveSystem) != null;
 
             _observer = groupObserver;
-            _buffer = new List<Entity>();
+            _buffer = new List<Entity<T>>();
         }
 
-        static GroupObserver CreateGroupObserver(Pool pool, TriggerOnEvent[] triggers)
+        static GroupObserver<T> CreateGroupObserver(Pool<T> pool, TriggerOnEvent[] triggers)
         {
             var triggersLength = triggers.Length;
-            var groups = new Group[triggersLength];
+            var groups = new Group<T>[triggersLength];
             var eventTypes = new GroupEventType[triggersLength];
             for (int i = 0; i < triggersLength; i++)
             {
@@ -72,7 +80,7 @@ namespace Rentitas
                 eventTypes[i] = trigger.EventType;
             }
 
-            return new GroupObserver(groups, eventTypes);
+            return new GroupObserver<T>(groups, eventTypes);
         }
 
         /// Activates the ReactiveSystem (ReactiveSystem are activated by default) and starts observing changes

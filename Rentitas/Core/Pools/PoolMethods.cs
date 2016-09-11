@@ -2,7 +2,7 @@
 
 namespace Rentitas
 {
-    public partial class Pool
+    public partial class Pool<T> where T : class, IComponent
     {
         public void ClearComponentPool(Type t)
         {

@@ -2,16 +2,16 @@
 
 namespace Rentitas
 {
-    public class EntityEqualityComparer : IEqualityComparer<Entity>
+    public class EntityEqualityComparer<T> : IEqualityComparer<Entity<T>> where T : class, IComponent
     {
-        public static readonly EntityEqualityComparer Comparer = new EntityEqualityComparer();
+        public static readonly EntityEqualityComparer<T> Comparer = new EntityEqualityComparer<T>();
 
-        public bool Equals(Entity x, Entity y)
+        public bool Equals(Entity<T> x, Entity<T> y)
         {
             return x == y;
         }
 
-        public int GetHashCode(Entity obj)
+        public int GetHashCode(Entity<T> obj)
         {
             return obj.Id;
         }

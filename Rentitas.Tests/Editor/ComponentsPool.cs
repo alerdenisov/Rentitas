@@ -1,15 +1,17 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
+using UnityEngine;
 
 namespace Rentitas.Tests
 {
     [TestFixture]
     public class ComponentsPool
     {
-        Pool pool;
+        Pool<ITestPool> pool;
 
-        private Pool TestPool(int creationIndex = 0)
+        private Pool<ITestPool> TestPool(int creationIndex = 0)
         {
-            return new Pool(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
+            return new Pool<ITestPool>(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
         [SetUp]
@@ -24,6 +26,8 @@ namespace Rentitas.Tests
         [Test]
         public void clears_all_component_pools()
         {
+            Debug.Log(pool.ComponentPools);
+            Debug.Log(string.Join(", ", pool.ComponentPools.Keys.Select(t => t.ToString()).ToArray()));
             Assert.AreEqual(1, pool.ComponentPools[typeof(TestComponentA)].Count);
             Assert.AreEqual(1, pool.ComponentPools[typeof(TestComponentB)].Count);
 

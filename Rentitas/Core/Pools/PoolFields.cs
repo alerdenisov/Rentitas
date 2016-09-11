@@ -3,26 +3,26 @@ using System.Collections.Generic;
 
 namespace Rentitas
 {
-    public partial class Pool
+    public partial class Pool<T> where T : class, IComponent
     {
-        readonly Dictionary<Type, Stack<IComponent>> 
-                                        _componentPools;
+        readonly Dictionary<Type, Stack<T>>
+            _componentPools;
 
-        readonly int                    _totalComponents;
-        readonly HashSet<Entity>        _entities                   = new HashSet<Entity>(EntityEqualityComparer.Comparer);
-        readonly Stack<Entity>          _reusableEntities           = new Stack<Entity>();
-        readonly HashSet<Entity>        _retainedEntities           = new HashSet<Entity>(EntityEqualityComparer.Comparer);
+        readonly int _totalComponents;
+        readonly HashSet<Entity<T>> _entities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
+        readonly Stack<Entity<T>> _reusableEntities = new Stack<Entity<T>>();
+        readonly HashSet<Entity<T>> _retainedEntities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
 
-        int                             _creationIndex;
-        Entity[]                        _entitiesCache;
+        int _creationIndex;
+        Entity<T>[] _entitiesCache;
 
         // Cache delegates to avoid gc allocations
-        Entity.EntityChanged            _cachedUpdateGroupsComponentAddedOrRemoved;
-        Entity.ComponentReplaced        _cachedUpdateGroupsComponentReplaced;
-        Entity.EntityReleased           _cachedOnEntityReleased;
-        readonly PoolMeta               _metaData;
+        Entity<T>.EntityChanged _cachedUpdateGroupsComponentAddedOrRemoved;
+        Entity<T>.ComponentReplaced _cachedUpdateGroupsComponentReplaced;
+        Entity<T>.EntityReleased _cachedOnEntityReleased;
+        readonly PoolMeta _metaData;
 
-        readonly Dictionary<IMatcher, Group> _groups = new Dictionary<IMatcher, Group>();
-        Dictionary<Type, List<Group>>   _groupsForTypes;
+        readonly Dictionary<IMatcher, Group<T>> _groups = new Dictionary<IMatcher, Group<T>>();
+        Dictionary<Type, List<Group<T>>> _groupsForTypes;
     }
 }

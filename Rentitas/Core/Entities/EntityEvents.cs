@@ -2,7 +2,7 @@
 
 namespace Rentitas
 {
-    public partial class Entity
+    public partial class Entity<T> where T : class, IComponent
     {
         /// Occurs when a component gets added. All event handlers will be removed when the entity gets destroyed by the pool.
         public event EntityChanged OnComponentAdded;
@@ -17,9 +17,9 @@ namespace Rentitas
         public event EntityReleased OnEntityReleased;
 
 
-        public delegate void EntityChanged(Entity entity, Type type, IComponent component);
-        public delegate void ComponentReplaced(Entity entity, Type type, IComponent previousComponent, IComponent newComponent);
-        public delegate void EntityReleased(Entity entity);
+        public delegate void EntityChanged(Entity<T> entity, Type type, T component);
+        public delegate void ComponentReplaced(Entity<T> entity, Type type, T previousComponent, T newComponent);
+        public delegate void EntityReleased(Entity<T> entity);
 
     }
 }

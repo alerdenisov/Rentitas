@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Rentitas
 {
-    public partial class Entity
+    public partial class Entity<T> where T : class, IComponent
     {
 
         // This method is used internally. Don't call it yourself.
@@ -32,7 +32,7 @@ namespace Rentitas
             _toStringCache = null;
             foreach (var key in _poolMeta.ComponentTypes)
             {
-                ReplaceInstance(key, null);
+                ReplaceInstance(key, default(T));
             }
         }
 
@@ -40,7 +40,7 @@ namespace Rentitas
         /// componentPools is set by the pool which created the entity and is used to reuse removed components.
         /// Removed components will be pushed to the componentPool.
         /// Use entity.CreateComponent(index, type) to get a new or reusable component from the componentPool.
-        public Stack<IComponent> GetComponentPool(Type type)
+        public Stack<T> GetComponentPool(Type type)
         {
             return ComponentsPool[type];
         }
@@ -72,28 +72,28 @@ namespace Rentitas
             return false;
         }
 
-        public T CreateComponent<T>() where T : IComponent, new()
+        public T2 CreateComponent<T2>() where T2 : T , new()
         {
-            var pool = GetComponentPool(typeof (T));
+            var pool = GetComponentPool(typeof (T2));
 
             if (pool.Count > 0)
-                return (T) pool.Pop();
+                return (T2) pool.Pop();
 
-            return new T();
+            return new T2();
         }
 
-        public Entity AddInstance<T>(T component) where T : IComponent
+        public Entity<T> AddInstance<T2>(T2 component) where T2 : T
         {
             if (!_isEnabled)
             {
-                throw new EntityIsNotEnabledException("Cannot add component '" + component + "' to " + this + "!");
+                throw new EntityIsNotEnabledException<T>("Cannot add component '" + component + "' to " + this + "!");
             }
 
             var type = component.GetType();
 
             if (Has(type))
             {
-                throw new EntityAlreadyHasComponentException(
+                throw new EntityAlreadyHasComponentException<T>(
                     type,
                     "Cannot add component '" + component + "' to " + this + "!",
                     "You should check if an entity already has the component before adding it or use entity.ReplaceComponent()."
@@ -110,16 +110,16 @@ namespace Rentitas
             return this;
         }
 
-        private Entity Remove(Type type)
+        private Entity<T> Remove(Type type)
         {
             if (!_isEnabled)
             {
-                throw new EntityIsNotEnabledException("Cannot remove component '" + type + "' from " + this + "!");
+                throw new EntityIsNotEnabledException<T>("Cannot remove component '" + type + "' from " + this + "!");
             }
 
             if (!Has(type))
             {
-                throw new EntityDoesNotHaveComponentException(
+                throw new EntityDoesNotHaveComponentException<T>(
                     type,
                     "Cannot remove component '" + type + "' from " + this + "!",
                     "You should check if an entity has the component before removing it."
@@ -127,14 +127,14 @@ namespace Rentitas
             }
 
 
-            return ReplaceInstance(type, null);
+            return ReplaceInstance(type, default(T));
         }
 
-        private Entity ReplaceInstance(Type type, IComponent component)
+        private Entity<T> ReplaceInstance(Type type, T component)
         {
             if (!_isEnabled)
             {
-                throw new EntityIsNotEnabledException("Cannot replace component '" + component + "' on " + this + "!");
+                throw new EntityIsNotEnabledException<T>("Cannot replace component '" + component + "' on " + this + "!");
             }
 
             if (Has(type))

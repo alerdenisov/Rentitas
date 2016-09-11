@@ -55,7 +55,7 @@ namespace Rentitas.Tests.Extra
     }
 
 
-    public class MultiReactiveSubSystemSpy : ReactiveSubSystemSpyBase, IMultiReactiveSystem
+    public class MultiReactiveSubSystemSpy : ReactiveSubSystemSpyBase, IMultiReactiveSystem<ITestPool>
     {
 
         public TriggerOnEvent[] Triggers { get { return _triggers; } }
@@ -113,7 +113,7 @@ namespace Rentitas.Tests.Extra
         }
     }
 
-    public class ReactiveSubSystemSpy : ReactiveSubSystemSpyBase, IReactiveSystem
+    public class ReactiveSubSystemSpy : ReactiveSubSystemSpyBase, IReactiveSystem<ITestPool>
     {
 
         public TriggerOnEvent Trigger { get { return new TriggerOnEvent(_matcher, _eventType); } }
@@ -188,7 +188,7 @@ namespace Rentitas.Tests.Extra
         int didExecute { get; }
         int didCleanup { get; }
         int didDeinitialize { get; }
-        Entity[] entities { get; }
+        Entity<ITestPool>[] entities { get; }
     }
 
     public class InitializeExecuteCleanupDeinitializeSystemSpy : ReactiveSubSystemSpyBase, IExecuteSystem
@@ -206,22 +206,22 @@ namespace Rentitas.Tests.Extra
         public int didExecute => _didExecute;
         public int didCleanup => _didCleanup;
         public int didDeinitialize => _didDeinitialize;
-        public Entity[] entities => _entities;
+        public Entity<ITestPool>[] entities => _entities;
 
-        public Action<List<Entity>> executeAction;
+        public Action<List<Entity<ITestPool>>> executeAction;
 
         protected int _didInitialize;
         protected int _didExecute;
         protected int _didCleanup;
         protected int _didDeinitialize;
-        protected Entity[] _entities;
+        protected Entity<ITestPool>[] _entities;
 
         public void Initialize()
         {
             _didInitialize += 1;
         }
 
-        public void Execute(List<Entity> entities)
+        public void Execute(List<Entity<ITestPool>> entities)
         {
             _didExecute += 1;
 

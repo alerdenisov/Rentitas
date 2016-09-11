@@ -7,32 +7,32 @@ using UnityEngine;
 
 namespace Rentitas
 {
-    public partial class Entity
+    public partial class Entity<T> : IEntity where T : class, IComponent
     {
 
         public int Id => _creationIndex;
-        public Dictionary<Type, Stack<IComponent>> ComponentsPool => _componentsPool;
+        public Dictionary<Type, Stack<T>> ComponentsPool => _componentsPool;
         public bool IsEnabled => _isEnabled;
         public int RetainCount => owners.Count;
         public PoolMeta PoolMeta => _poolMeta;
         public int TotalComponents => PoolMeta.TotalComponents;
 
         /// Use pool.CreateEntity() to create a new entity and pool.DestroyEntity() to destroy it.
-        public Entity(Dictionary<Type, Stack<IComponent>> componentsPool, PoolMeta meta)
+        public Entity(Dictionary<Type, Stack<T>> componentsPool, PoolMeta meta)
         {
             _poolMeta = meta;
             _componentsPool = componentsPool;
             _totalComponents = meta.TotalComponents;
-            _components = new Dictionary<Type, IComponent>(_totalComponents);
+            _components = new Dictionary<Type, T>(_totalComponents);
 
             foreach (var kv in _componentsPool) _components.Add(kv.Key, null);
         }
 
-        public IComponent[] GetComponents()
+        public T[] GetComponents()
         {
             if (_componentsCache == null)
             {
-                var components = RentitasCache.GetIComponentList();
+                var components = RentitasCache.GetComponentList<T>();
 
                 foreach (var componentType in _poolMeta.ComponentTypes)
                 {
@@ -69,19 +69,19 @@ namespace Rentitas
             return _componentTypesCache;
         }
 
-        public Entity Add<T>(Func<T,T> mod = null) where T : IComponent, new()
+        public Entity<T> Add<T2>(Func<T2,T2> mod = null) where T2 : T, new()
         {
-            var comp = CreateComponent<T>();
+            var comp = CreateComponent<T2>();
             mod?.Invoke(comp);
             AddInstance(comp);
 
             return this;
         } 
 
-        public IComponent Get(Type componentType)
+        public T Get(Type componentType)
         {
             if (!Has(componentType))
-                throw new EntityDoesNotHaveComponentException(
+                throw new EntityDoesNotHaveComponentException<T>(
                     componentType,
                     "Cannot get component '" + PoolMeta.ComponentNames[componentType] + "' from " + this + "!",
                     "You should check if an entity has the component before getting it."
@@ -90,33 +90,32 @@ namespace Rentitas
             return _components[componentType];
         }
 
-        public T Get<T>() where T : IComponent
+        public T2 Get<T2>() where T2 : T, new()
         {
-            return (T) Get(typeof (T));
+            return (T2) Get(typeof (T2));
         }
 
-        public bool Has<T>() where T : IComponent
+        public bool Has<T2>() where T2 : T , new()
         {
-            return Has(typeof(T));
+            return Has(typeof(T2));
         }
 
-        public Entity Remove<T>() where T : IComponent
+        public Entity<T> Remove<T2>() where T2 : T, new()
         {
-            var t = typeof (T);
-            return Remove(typeof(T));
+            return Remove(typeof(T2));
         }
 
-        public Entity Replace<T>(Func<T, T> mod = null) where T : IComponent, new()
+        public Entity<T> Replace<T2>(Func<T2, T2> mod = null) where T2 : T, new()
         {
-            var comp = CreateComponent<T>();
+            var comp = CreateComponent<T2>();
             mod?.Invoke(comp);
             ReplaceInstance(comp);
             return this;
         }
 
-        public Entity ReplaceInstance<T>(T component) where T : IComponent
+        public Entity<T> ReplaceInstance<T2>(T2 component) where T2 : T, new()
         {
-            return ReplaceInstance(typeof(T), component);
+            return ReplaceInstance(typeof(T2), component);
         }
 
         public override string ToString()

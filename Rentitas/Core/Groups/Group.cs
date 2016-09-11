@@ -1,6 +1,6 @@
 ﻿namespace Rentitas
 {
-    public partial class Group
+    public partial class Group<T> where T : class, IComponent
     {
         /// Returns the number of entities in the group.
         public int Count => _entities.Count;

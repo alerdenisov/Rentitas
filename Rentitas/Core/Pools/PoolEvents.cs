@@ -1,10 +1,9 @@
 ﻿using System;
-using Entitas;
 using Rentitas.Caching;
 
 namespace Rentitas
 {
-    public partial class Pool 
+    public partial class Pool<T> where T : class, IComponent
     {
         /// Occurs when an entity gets created.
         public event PoolChanged OnEntityCreated;
@@ -21,16 +20,16 @@ namespace Rentitas
         /// Occurs when a group gets cleared.
         public event GroupChanged OnGroupCleared;
 
-        public delegate void PoolChanged(Pool pool, Entity entity);
-        public delegate void GroupChanged(Pool pool, Group group);
+        public delegate void PoolChanged(Pool<T> pool, Entity<T> entity);
+        public delegate void GroupChanged(Pool<T> pool, Group<T> group);
 
 
-        void updateGroupsComponentAddedOrRemoved(Entity entity, Type type, IComponent component)
+        void UpdateGroupsComponentAddedOrRemoved(Entity<T> entity, Type type, T component)
         {
             var groups = _groupsForTypes[type];
             if (groups != null)
             {
-                var events = RentitasCache.GetGroupChangedList();
+                var events = RentitasCache.GetGroupChangedList<T>();
 
                 for (int i = 0; i < groups.Count; i++)
                 {
@@ -47,7 +46,7 @@ namespace Rentitas
             }
         }
 
-        void updateGroupsComponentReplaced(Entity entity, Type type, IComponent previousComponent, IComponent newComponent)
+        void UpdateGroupsComponentReplaced(Entity<T> entity, Type type, T previousComponent, T newComponent)
         {
             var groups = _groupsForTypes[type];
             if (groups != null)
@@ -59,11 +58,11 @@ namespace Rentitas
             }
         }
 
-        void onEntityReleased(Entity entity)
+        void OnEntityReleased(Entity<T> entity)
         {
             if (entity._isEnabled)
             {
-                throw new EntityIsNotDestroyedException("Cannot release " + entity + "!");
+                throw new EntityIsNotDestroyedException<T>("Cannot release " + entity + "!");
             }
             entity.RemoveAllOnEntityReleasedHandlers();
             _retainedEntities.Remove(entity);

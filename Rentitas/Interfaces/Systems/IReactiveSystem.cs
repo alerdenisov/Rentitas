@@ -3,28 +3,28 @@
 namespace Rentitas
 {
     /// Implement this interface if you want to create a reactive system which is triggered by the specified Trigger.
-    public interface IReactiveSystem : IReactiveExecuteSystem
+    public interface IReactiveSystem<T> : IReactiveExecuteSystem<T> where T : class, IComponent
     {
         TriggerOnEvent Trigger { get; }
     }
 
     /// Implement this interface if you want to create a reactive system which is triggered by any of the specified Triggers.
-    public interface IMultiReactiveSystem : IReactiveExecuteSystem
+    public interface IMultiReactiveSystem<T> : IReactiveExecuteSystem<T> where T : class, IComponent
     {
         TriggerOnEvent[] Triggers { get; }
     }
 
     /// Implement this interface if you want to create a reactive system which is triggered by a GroupObserver.
     /// This is useful when you want to react to changes in multiple groups from different pools.
-    public interface IGroupObserverSystem : IReactiveExecuteSystem
+    public interface IGroupObserverSystem<T> : IReactiveExecuteSystem<T> where T : class, IComponent
     {
-        GroupObserver GroupObserver { get; }
+        GroupObserver<T> GroupObserver { get; }
     }
 
     /// Not meant to be implemented. Use either IReactiveSystem or IMultiReactiveSystem.
-    public interface IReactiveExecuteSystem : ISystem
+    public interface IReactiveExecuteSystem<T> : ISystem where T : class, IComponent
     {
-        void Execute(List<Entity> entities);
+        void Execute(List<Entity<T>> entities);
     }
 
     /// Implement this interface in combination with IReactiveSystem or IMultiReactiveSystem.

@@ -11,8 +11,8 @@ namespace Rentitas.Tests
         protected TestComponentA refA;
         protected TestComponentB refB;
         protected TestComponentC refC;
-        protected Entity entity;
-        protected Pool pool;
+        protected Entity<ITestPool> entity;
+        protected Pool<ITestPool> pool;
 
         [SetUp]
         public void Setup()
@@ -21,12 +21,12 @@ namespace Rentitas.Tests
             refB = new TestComponentB();
             refC = new TestComponentC();
 
-            pool = new Pool(refA, refB, refC);
+            pool = new Pool<ITestPool>(refA, refB, refC);
 
             entity = pool.CreateEntity();
         }
 
-        protected void AssertHasComponentA(Entity e, TestComponentA comp = null)
+        protected void AssertHasComponentA(Entity<ITestPool> e, TestComponentA comp = null)
         {
             if (comp == null)
                 comp = refA;
@@ -46,7 +46,7 @@ namespace Rentitas.Tests
             Assert.IsTrue(e.HasAny(typeof(TestComponentA)));
         }
 
-        protected void AssertHasNotComponentA(Entity e)
+        protected void AssertHasNotComponentA(Entity<ITestPool> e)
         {
             var components = e.GetComponents();
             Assert.AreEqual(0, components.Length);
@@ -122,7 +122,7 @@ namespace Rentitas.Tests
         [Test]
         public void throws_when_attempting_to_Get_component_at_type_which_hasnt_beed_added()
         {
-            Assert.Catch<EntityDoesNotHaveComponentException>(() => entity.Get<TestComponentA>());
+            Assert.Catch<EntityDoesNotHaveComponentException<ITestPool>>(() => entity.Get<TestComponentA>());
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace Rentitas.Tests
         [Test]
         public void throws_when_attempting_to_remove_comp_which_hasnt_been_added()
         {
-            Assert.Catch<EntityDoesNotHaveComponentException>(() => entity.Remove<TestComponentA>());
+            Assert.Catch<EntityDoesNotHaveComponentException<ITestPool>>(() => entity.Remove<TestComponentA>());
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace Rentitas.Tests
         [Test]
         public void throw_when_adding_already_exist_component()
         {
-            Assert.Catch<EntityAlreadyHasComponentException>(() => entity.Add<TestComponentA>());
+            Assert.Catch<EntityAlreadyHasComponentException<ITestPool>>(() => entity.Add<TestComponentA>());
         }
 
         [Test]
@@ -516,14 +516,14 @@ namespace Rentitas.Tests
         [Test]
         public void throws_when_releasing_not_owner_object()
         {
-            Assert.Catch<EntityIsNotRetainedByOwnerException>(() => entity.Release(this));
+            Assert.Catch<EntityIsNotRetainedByOwnerException<ITestPool>>(() => entity.Release(this));
         }
 
         [Test]
         public void throws_when_retaining_twice()
         {
             entity.Retain(this);
-            Assert.Catch<EntityIsAlreadyRetainedByOwnerException>(() => entity.Retain(this));
+            Assert.Catch<EntityIsAlreadyRetainedByOwnerException<ITestPool>>(() => entity.Retain(this));
         }
     }
 

@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace Rentitas
 {
-    public partial class Group
+    public partial class Group<T> where T : class, IComponent
     {
         /// This is used by the pool to manage the group.
-        public void HandleEntitySilently(Entity entity)
+        public void HandleEntitySilently(Entity<T> entity)
         {
             if (_matcher.Matches(entity))
                 AddEntitySilently(entity);
@@ -15,7 +15,7 @@ namespace Rentitas
         }
 
         /// This is used by the pool to manage the group.
-        public void HandleEntity(Entity entity, Type type, IComponent component)
+        public void HandleEntity(Entity<T> entity, Type type, T component)
         {
             if (_matcher.Matches(entity))
                 AddEntity(entity, type, component);
@@ -24,7 +24,7 @@ namespace Rentitas
         }
 
         /// This is used by the pool to manage the group.
-        public void UpdateEntity(Entity entity, Type type, IComponent previousComponent, IComponent newComponent)
+        public void UpdateEntity(Entity<T> entity, Type type, T previousComponent, T newComponent)
         {
             if (_entities.Contains(entity))
             {
@@ -43,14 +43,14 @@ namespace Rentitas
             OnEntityUpdated = null;
         }
 
-        internal GroupChanged HandleEntity(Entity entity)
+        internal GroupChanged HandleEntity(Entity<T> entity)
         {
             return _matcher.Matches(entity)
                        ? (AddEntitySilently(entity) ? OnEntityAdded : null)
                        : (RemoveEntitySilently(entity) ? OnEntityRemoved : null);
         }
 
-        bool AddEntitySilently(Entity entity)
+        bool AddEntitySilently(Entity<T> entity)
         {
             var added = _entities.Add(entity);
             if (added)
@@ -63,7 +63,7 @@ namespace Rentitas
             return added;
         }
 
-        void AddEntity(Entity entity, Type type, IComponent component)
+        void AddEntity(Entity<T> entity, Type type, T component)
         {
             if (AddEntitySilently(entity))
             {
@@ -71,7 +71,7 @@ namespace Rentitas
             }
         }
 
-        bool RemoveEntitySilently(Entity entity)
+        bool RemoveEntitySilently(Entity<T> entity)
         {
             var removed = _entities.Remove(entity);
             if (removed)
@@ -84,7 +84,7 @@ namespace Rentitas
             return removed;
         }
 
-        void RemoveEntity(Entity entity, Type type, IComponent component)
+        void RemoveEntity(Entity<T> entity, Type type, T component)
         {
             var removed = _entities.Remove(entity);
             if (removed)
@@ -97,17 +97,17 @@ namespace Rentitas
         }
 
         /// Determines whether this group has the specified entity.
-        public bool ContainsEntity(Entity entity)
+        public bool ContainsEntity(Entity<T> entity)
         {
             return _entities.Contains(entity);
         }
 
         /// Returns all entities which are currently in this group.
-        public Entity[] GetEntities()
+        public Entity<T>[] GetEntities()
         {
             if (_entitiesCache == null)
             {
-                _entitiesCache = new Entity[_entities.Count];
+                _entitiesCache = new Entity<T>[_entities.Count];
                 _entities.CopyTo(_entitiesCache);
             }
 
@@ -116,7 +116,7 @@ namespace Rentitas
 
         /// Returns the only entity in this group. It will return null if the group is empty.
         /// It will throw an exception if the group has more than one entity.
-        public Entity GetSingleEntity()
+        public Entity<T> GetSingleEntity()
         {
             if (_singleEntityCache == null)
             {
@@ -135,7 +135,7 @@ namespace Rentitas
                 }
                 else
                 {
-                    throw new GroupSingleEntityException(this);
+                    throw new GroupSingleEntityException<T>(this);
                 }
             }
 
@@ -144,9 +144,9 @@ namespace Rentitas
     }
 
 
-    public class GroupSingleEntityException : RentitasException
+    public class GroupSingleEntityException<T> : RentitasException where T : class, IComponent
     {
-        public GroupSingleEntityException(Group group) :
+        public GroupSingleEntityException(Group<T> group) :
             base("Cannot get the single entity from " + group + "!\nGroup contains " + group.Count + " entities:",
                 string.Join("\n", group.GetEntities().Select(e => e.ToString()).ToArray()))
         {

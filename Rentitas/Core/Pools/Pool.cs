@@ -19,7 +19,7 @@ namespace Rentitas
         }
     }
 
-    public partial class Pool
+    public partial class Pool<T> where T : class, IComponent
     {
 
         /// Returns the number of entities in the pool.
@@ -32,12 +32,12 @@ namespace Rentitas
         /// Returns all componentPools. componentPools is used to reuse removed components.
         /// Removed components will be pushed to the componentPool.
         /// Use entity.CreateComponent(index, type) to get a new or reusable component from the componentPool.
-        public Dictionary<Type, Stack<IComponent>> ComponentPools => _componentPools;
+        public Dictionary<Type, Stack<T>> ComponentPools => _componentPools;
         public PoolMeta Meta => _metaData;
 
-        public Pool(params IComponent[] components) : this(0, components) { }
+        public Pool(params T[] components) : this(0, components) { }
 
-        public Pool(int creationIndex, params IComponent[] components) : this(components.Length, creationIndex)
+        public Pool(int creationIndex, params T[] components) : this(components.Length, creationIndex)
         {
             var types = RentitasCache.GetTypeHashSet();
             for (int i = 0; i < components.Length; i++)
@@ -45,12 +45,12 @@ namespace Rentitas
                 var component = components[i];
                 var type = component.GetType();
                 if(!types.Add(type))
-                    throw new PoolMetaDataException(this, null);
+                    throw new PoolMetaDataException<T>(this, null);
 
-                var stack = new Stack<IComponent>();
+                var stack = new Stack<T>();
                 stack.Push(component);
                 _componentPools.Add(type, stack);
-                _groupsForTypes.Add(type, new List<Group>());
+                _groupsForTypes.Add(type, new List<Group<T>>());
             }
 
             _metaData = new PoolMeta(
@@ -69,20 +69,20 @@ namespace Rentitas
             _totalComponents = totalComponents;
             _creationIndex = creationIndex;
             
-            _groupsForTypes = new Dictionary<Type, List<Group>>(totalComponents);
-            _componentPools = new Dictionary<Type, Stack<IComponent>>(totalComponents);
+            _groupsForTypes = new Dictionary<Type, List<Group<T>>>(totalComponents);
+            _componentPools = new Dictionary<Type, Stack<T>>(totalComponents);
 
             // Cache delegates to avoid gc allocations
-            _cachedUpdateGroupsComponentAddedOrRemoved  = updateGroupsComponentAddedOrRemoved;
-            _cachedUpdateGroupsComponentReplaced        = updateGroupsComponentReplaced;
-            _cachedOnEntityReleased                     = onEntityReleased;
+            _cachedUpdateGroupsComponentAddedOrRemoved  = UpdateGroupsComponentAddedOrRemoved;
+            _cachedUpdateGroupsComponentReplaced        = UpdateGroupsComponentReplaced;
+            _cachedOnEntityReleased                     = OnEntityReleased;
 
         }
 
         /// Creates a new entity or gets a reusable entity from the internal ObjectPool for entities.
-        public virtual Entity CreateEntity()
+        public virtual Entity<T> CreateEntity()
         {
-            var entity = _reusableEntities.Count > 0 ? _reusableEntities.Pop() : new Entity(_componentPools, _metaData);
+            var entity = _reusableEntities.Count > 0 ? _reusableEntities.Pop() : new Entity<T>(_componentPools, _metaData);
             entity._isEnabled = true;
             entity._creationIndex = _creationIndex++;
             entity.Retain(this);
@@ -100,11 +100,11 @@ namespace Rentitas
         }
 
         /// Returns all entities which are currently in the pool.
-        public virtual Entity[] GetEntities()
+        public virtual Entity<T>[] GetEntities()
         {
             if (_entitiesCache == null)
             {
-                _entitiesCache = new Entity[_entities.Count];
+                _entitiesCache = new Entity<T>[_entities.Count];
                 _entities.CopyTo(_entitiesCache);
             }
 
@@ -112,12 +112,12 @@ namespace Rentitas
         }
 
         /// Destroys the entity, removes all its components and pushs it back to the internal ObjectPool for entities.
-        public virtual void DestroyEntity(Entity entity)
+        public virtual void DestroyEntity(Entity<T> entity)
         {
             var removed = _entities.Remove(entity);
             if (!removed)
             {
-                throw new PoolDoesNotContainEntityException("'" + this + "' cannot destroy " + entity + "!",
+                throw new PoolDoesNotContainEntityException<T>("'" + this + "' cannot destroy " + entity + "!",
                     "Did you call pool.DestroyEntity() on a wrong pool?");
             }
             _entitiesCache = null;
@@ -141,12 +141,12 @@ namespace Rentitas
             }
         }
 
-        public Group GetGroup(IMatcher matcher)
+        public Group<T> GetGroup(IMatcher matcher)
         {
-            Group group;
+            Group<T> group;
             if (!_groups.TryGetValue(matcher, out group))
             {
-                group = new Group(matcher);
+                group = new Group<T>(matcher);
                 var entities = GetEntities();
                 for (int i = 0; i < entities.Length; i++)
                 {
@@ -159,7 +159,7 @@ namespace Rentitas
                     var type = matcher.Types[i];
                     if (_groupsForTypes[type] == null)
                     {
-                        _groupsForTypes[type] = new List<Group>();
+                        _groupsForTypes[type] = new List<Group<T>>();
                     }
                     _groupsForTypes[type].Add(group);
                 }
@@ -184,12 +184,12 @@ namespace Rentitas
 
             if (_retainedEntities.Count != 0)
             {
-                throw new PoolStillHasRetainedEntitiesException(this);
+                throw new PoolStillHasRetainedEntitiesException<T>(this);
             }
         }
 
         /// Determines whether the pool has the specified entity.
-        public virtual bool HasEntity(Entity entity)
+        public virtual bool HasEntity(Entity<T> entity)
         {
             return _entities.Contains(entity);
         }

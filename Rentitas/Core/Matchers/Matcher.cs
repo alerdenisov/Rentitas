@@ -25,7 +25,7 @@ namespace Rentitas
         {
         }
 
-        public bool Matches(Entity entity)
+        public bool Matches(IEntity entity)
         {
             var matchesAllOf =  _allOfTypes  == null ||  entity.Has(_allOfTypes);
             var matchesAnyOf =  _anyOfTypes  == null ||  entity.HasAny(_anyOfTypes);

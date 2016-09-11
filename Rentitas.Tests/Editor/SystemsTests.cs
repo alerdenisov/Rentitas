@@ -7,19 +7,19 @@ namespace Rentitas.Tests
     [TestFixture]
     public class BaseSystemsContext
     {
-        protected Pool pool;
+        protected Pool<ITestPool> pool;
 
         [SetUp]
         public void Setup1()
         {
-            pool = new Pool(0, new TestComponentA(), new TestComponentB(), new TestComponentC());
+            pool = new Pool<ITestPool>(0, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
 
-        protected ReactiveSystem CreateReactiveSystem(Pool pool)
+        protected ReactiveSystem<ITestPool> CreateReactiveSystem(Pool<ITestPool> pool)
         {
             var subSystem = new ReactiveSubSystemSpy(Matcher.AllOf(typeof(TestComponentA)), GroupEventType.OnEntityAdded);
-            var reactiveSystem = new ReactiveSystem(pool, subSystem);
+            var reactiveSystem = new ReactiveSystem<ITestPool>(pool, subSystem);
             pool.CreateEntity().Add<TestComponentA>();
 
             return reactiveSystem;

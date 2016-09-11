@@ -2,12 +2,12 @@
 
 namespace Rentitas
 {
-    public partial class Group
+    public partial class Group<T> where T : class, IComponent
     {
-        readonly IMatcher           _matcher;
-        readonly HashSet<Entity>    _entities = new HashSet<Entity>(EntityEqualityComparer.Comparer);
-        Entity[]                    _entitiesCache;
-        Entity                      _singleEntityCache;
-        string                      _toStringCache;
+        readonly IMatcher              _matcher;
+        readonly HashSet<Entity<T>>    _entities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
+        Entity<T>[]                    _entitiesCache;
+        Entity<T>                      _singleEntityCache;
+        string                         _toStringCache;
     }
 }

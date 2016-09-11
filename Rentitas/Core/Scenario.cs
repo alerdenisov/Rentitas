@@ -22,10 +22,10 @@ namespace Rentitas
         /// Adds the system instance to the systems list.
         public virtual Scenario Add(ISystem system)
         {
-            var reactiveSystem = system as ReactiveSystem;
+            var reactiveSystem = system as IReactiveIntermalSystem;
 
             var initializeSystem = reactiveSystem != null
-                ? reactiveSystem.Subsystem as IInitializeSystem
+                ? reactiveSystem.InternalSubsystem as IInitializeSystem
                 : system as IInitializeSystem;
 
             if (initializeSystem != null)
@@ -40,7 +40,7 @@ namespace Rentitas
             }
 
             var cleanupSystem = reactiveSystem != null
-                ? reactiveSystem.Subsystem as ICleanupSystem
+                ? reactiveSystem.InternalSubsystem as ICleanupSystem
                 : system as ICleanupSystem;
 
             if (cleanupSystem != null)
@@ -49,7 +49,7 @@ namespace Rentitas
             }
 
             var deinitializeSystem = reactiveSystem != null
-                ? reactiveSystem.Subsystem as IDeinitializeSystem
+                ? reactiveSystem.InternalSubsystem as IDeinitializeSystem
                 : system as IDeinitializeSystem;
 
             if (deinitializeSystem != null)
@@ -95,7 +95,7 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as ReactiveSystem)?.Activate();
+                (system as IReactiveIntermalSystem)?.Activate();
                 (system as Scenario)?.ActivateReactiveSystems();
             }
         }
@@ -107,7 +107,7 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as ReactiveSystem)?.Deactivate();
+                (system as IReactiveIntermalSystem)?.Deactivate();
                 (system as Scenario)?.DeactivateReactiveSystems();
             }
         }
@@ -118,7 +118,7 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as ReactiveSystem)?.Clear();
+                (system as IReactiveIntermalSystem)?.Clear();
                 (system as Scenario)?.ClearReactiveSystems();
             }
         }

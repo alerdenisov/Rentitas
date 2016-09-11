@@ -9,17 +9,17 @@ namespace Rentitas.Tests
     [TestFixture]
     public class GroupTests
     {
-        Entity eAB1;
-        Entity eAB2;
-        Entity eA;
+        Entity<ITestPool> eAB1;
+        Entity<ITestPool> eAB2;
+        Entity<ITestPool> eA;
 
         IMatcher matcherAB;
 
-        Pool pool;
+        Pool<ITestPool> pool;
 
-        private Pool TestPool(int creationIndex = 0)
+        private Pool<ITestPool> TestPool(int creationIndex = 0)
         {
-            return new Pool(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
+            return new Pool<ITestPool>(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
 
@@ -162,7 +162,7 @@ namespace Rentitas.Tests
         public void reset_and_remove_groups_from_pool()
         {
             var created = 0;
-            Group createdGroup = null;
+            Group<ITestPool> createdGroup = null;
             pool.OnGroupCreated += (p, g) =>
             {
                 created += 1;
