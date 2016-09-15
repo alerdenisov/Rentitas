@@ -29,12 +29,12 @@ namespace Rentitas.Tests
     [TestFixture]
     public class ScenarioContext : BaseSystemsContext
     {
-        protected Scenario scenario;
+        protected BaseScenario scenario;
 
         [SetUp]
         public void Setup2()
         {
-            scenario = new Scenario();
+            scenario = new BaseScenario();
         }
     }
 
@@ -198,7 +198,7 @@ namespace Rentitas.Tests
 
             scenario.Add(sys);
 
-            var parent = new Scenario();
+            var parent = new BaseScenario();
             parent.Add(scenario);
 
             Assert.AreEqual(0, s.didInitialize);
@@ -244,7 +244,7 @@ namespace Rentitas.Tests
 
             scenario.Add(sys);
 
-            var parent = new Scenario();
+            var parent = new BaseScenario();
             parent.Add(scenario);
 
 
@@ -282,7 +282,7 @@ namespace Rentitas.Tests
 
             scenario.Add(sys);
 
-            var parent = new Scenario();
+            var parent = new BaseScenario();
             parent.Add(scenario);
 
 
@@ -330,7 +330,7 @@ namespace Rentitas.Tests
 
             scenario.Add(sys);
 
-            var parent = new Scenario();
+            var parent = new BaseScenario();
             parent.Add(scenario);
 
 

@@ -2,18 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using Rentitas;
+using Rentitas.Unity;
 
-public interface ICoreComponent : IComponent { }
-
-public class SampleApp : MonoBehaviour, IKernel {
-    public Scenario AppScenario { get; private set; }
+public class SampleApp : MonoBehaviour {
+    public BaseScenario AppScenario { get; private set; }
     public List<IPool> SetupPools()
     {
-        return null;
+        return null;    
     }
 
-    void Test()
+    void Awake()
     {
-        var e = new Entity<ICoreComponent>(null, null);
+        AppScenario = new Scenario("Test");
     }
 }

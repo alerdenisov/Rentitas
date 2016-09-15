@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Rentitas.Kernel;
 
 namespace Rentitas
 {
     public interface IKernel
     {
-        Scenario AppScenario { get; }
-        List<IPool> SetupPools();
+        BaseScenario Scenario { get; }
+        IPool[] PoolInterfaces { get; }
     }
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Rentitas
 {
-    public class Scenario : IInitializeSystem, IExecuteSystem, IDeinitializeSystem, ICleanupSystem
+    public class BaseScenario : IInitializeSystem, IExecuteSystem, IDeinitializeSystem, ICleanupSystem
     {
         protected readonly List<IInitializeSystem> InitializeSystems;
         protected readonly List<IExecuteSystem> ExecuteSystems;
         protected readonly List<IDeinitializeSystem> DeinitializeSystems;
         protected readonly List<ICleanupSystem> CleanupSystems;
 
-        public Scenario()
+        public BaseScenario(string name = "")
         {
             InitializeSystems = new List<IInitializeSystem>();
             ExecuteSystems = new List<IExecuteSystem>();
@@ -20,7 +20,7 @@ namespace Rentitas
         }
 
         /// Adds the system instance to the systems list.
-        public virtual Scenario Add(ISystem system)
+        public virtual BaseScenario Add(ISystem system)
         {
             var reactiveSystem = system as IReactiveIntermalSystem;
 
@@ -68,13 +68,13 @@ namespace Rentitas
             }
         }
 
-        public void Execute()
+        public virtual void Execute()
         {
             for (int i = 0; i < ExecuteSystems.Count; i++)
                 ExecuteSystems[i].Execute();
         }
 
-        public void Deinitialize()
+        public virtual void Deinitialize()
         {
             for (int i = 0; i < DeinitializeSystems.Count; i++)
                 DeinitializeSystems[i].Deinitialize();
@@ -96,7 +96,7 @@ namespace Rentitas
             {
                 var system = ExecuteSystems[i];
                 (system as IReactiveIntermalSystem)?.Activate();
-                (system as Scenario)?.ActivateReactiveSystems();
+                (system as BaseScenario)?.ActivateReactiveSystems();
             }
         }
 
@@ -108,7 +108,7 @@ namespace Rentitas
             {
                 var system = ExecuteSystems[i];
                 (system as IReactiveIntermalSystem)?.Deactivate();
-                (system as Scenario)?.DeactivateReactiveSystems();
+                (system as BaseScenario)?.DeactivateReactiveSystems();
             }
         }
 
@@ -119,7 +119,7 @@ namespace Rentitas
             {
                 var system = ExecuteSystems[i];
                 (system as IReactiveIntermalSystem)?.Clear();
-                (system as Scenario)?.ClearReactiveSystems();
+                (system as BaseScenario)?.ClearReactiveSystems();
             }
         }
     }

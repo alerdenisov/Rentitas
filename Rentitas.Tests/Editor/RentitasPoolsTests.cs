@@ -4,19 +4,8 @@ using NUnit.Framework;
 
 namespace Rentitas.Tests
 {
-    public interface ITestPool : IComponent { }
-    public interface ITestSecondPool : IComponent { }
 
-    public class TestComponentA : ITestPool { }
-    public class TestComponentB : ITestPool { }
-    public class TestComponentC : ITestPool { }
-
-    public class TestNameComponent : ITestSecondPool
-    {
-        public string Name;
-    }
-
-    public class Pools
+    public class PoolsTest
     {
         private Pool<ITestPool> TestPool(int creationIndex = 0)
         {

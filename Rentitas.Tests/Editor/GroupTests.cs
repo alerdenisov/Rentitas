@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
-using Debug = System.Diagnostics.Debug;
 
 namespace Rentitas.Tests
 {
@@ -19,7 +18,7 @@ namespace Rentitas.Tests
 
         private Pool<ITestPool> TestPool(int creationIndex = 0)
         {
-            return new Pool<ITestPool>(creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
+            return new Pool<ITestPool>(string.Empty, creationIndex, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
 

@@ -19,8 +19,13 @@ namespace Rentitas
         }
     }
 
-    public partial class Pool<T> where T : class, IComponent
+    public partial class Pool<T> : IPool where T : class, IComponent
     {
+        public string PoolName { get; private set; }
+        /// <summary>
+        /// Generic type of interface extended IComponent
+        /// </summary>
+        public Type PoolType => typeof (T);
 
         /// Returns the number of entities in the pool.
         public int Count => _entities.Count;
@@ -35,10 +40,14 @@ namespace Rentitas
         public Dictionary<Type, Stack<T>> ComponentPools => _componentPools;
         public PoolMeta Meta => _metaData;
 
-        public Pool(params T[] components) : this(0, components) { }
+        public Pool(params T[] components) : this(string.Empty, 0, components) { }
 
-        public Pool(int creationIndex, params T[] components) : this(components.Length, creationIndex)
+        public Pool(string name, params T[] components) : this(name, 0, components) { }
+        public Pool(int creationIndex, params T[] components) : this(string.Empty, creationIndex, components) { }
+
+        public Pool(string name, int creationIndex, params T[] components) : this(components.Length, creationIndex)
         {
+            PoolName = name;
             var types = RentitasCache.GetTypeHashSet();
             for (int i = 0; i < components.Length; i++)
             {
