@@ -4,6 +4,43 @@ using UnityEngine;
 
 namespace Rentitas.Tests.Extra
 {
+    public class ApplicationSystemSpy : ISetApplication
+    {
+        public IApplication Application => _app;
+        private IApplication _app;
+
+        public int didInject { get; private set; }
+
+        public ApplicationSystemSpy()
+        {
+            didInject = 0;
+        }
+
+        public void SetApplication(IApplication app)
+        {
+            didInject++;
+            _app = app;
+        }
+    }
+    public class PoolsSystemSpy : ISetPools
+    {
+        public Pools Pools => _pools;
+        private Pools _pools;
+
+        public int didInject { get; private set; }
+
+        public PoolsSystemSpy()
+        {
+            didInject = 0;
+        }
+
+        public void SetPools(Pools pools)
+        {
+            didInject++;
+            _pools = pools;
+        }
+    }
+
     public class CleanupSystemSpy : ICleanupSystem
     {
         public int didCleanup { get { return _didCleanup; } }

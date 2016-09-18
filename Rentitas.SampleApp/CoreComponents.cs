@@ -15,7 +15,7 @@ namespace Rentitas.SampleApp
         public bool IsDebug;
     }
 
-    public class TimerComponent : ICorePool
+    public class TimerComponent : ICorePool, ISingleton
     {
         public long Time;
     }

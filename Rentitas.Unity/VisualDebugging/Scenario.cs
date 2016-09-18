@@ -5,7 +5,7 @@ using Rentitas.Unity.VisualDebugging;
 namespace Rentitas.Unity
 {
 #if UNITY_EDITOR
-    public class Scenario : DebugScenario
+    public class Scenario : BaseScenario
 #else
     public class Scenario : BaseScenario
 #endif

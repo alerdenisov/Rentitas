@@ -15,7 +15,6 @@ namespace Rentitas.Tests
             pool = new Pool<ITestPool>(0, new TestComponentA(), new TestComponentB(), new TestComponentC());
         }
 
-
         protected ReactiveSystem<ITestPool> CreateReactiveSystem(Pool<ITestPool> pool)
         {
             var subSystem = new ReactiveSubSystemSpy(Matcher.AllOf(typeof(TestComponentA)), GroupEventType.OnEntityAdded);

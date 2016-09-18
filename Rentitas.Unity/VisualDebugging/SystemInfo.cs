@@ -48,7 +48,7 @@ namespace Rentitas.Unity.VisualDebugging
         {
             _system = system;
 
-            var reactiveSystem = system as IReactiveIntermalSystem;
+            var reactiveSystem = system as IReactiveInternalSystem;
             var isReactive = reactiveSystem != null;
             Type systemType;
             if (isReactive)

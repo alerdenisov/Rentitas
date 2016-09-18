@@ -31,16 +31,6 @@ namespace Rentitas.Unity
             instance.Show();
         }
 
-        void Awake()
-        {
-            SetupWidgets();
-        }
-
-        void Start()
-        {
-            SetupWidgets();
-        }
-
         void OnGUI()
         {
             if (_widget == null)

@@ -3,22 +3,23 @@ using Rentitas.Unity;
 
 namespace Rentitas.SampleApp
 {
-    public class CoreKernel// : IKernel
+    public class CoreKernel : IKernel
     {
-        public BaseScenario Scenario => _kernelScenario;
-        public PoolRegistrationData[] PoolInterfaces => _poolRegistration;
-
-
-        private Scenario _kernelScenario;
-        private PoolRegistrationData[] _poolRegistration;
+        public BaseScenario Scenario { get; private set; }
+        public IPool[] PoolInterfaces { get; private set; }
 
         public CoreKernel()
         {
-            _poolRegistration = new[]
+            PoolInterfaces = new[]
             {
-                new PoolRegistrationData(typeof(ICorePool)), 
-                new PoolRegistrationData(typeof(ICorePool), "Temp"), 
+                new Pool<ICorePool>(
+                    new TimerComponent(),
+                    new GameStateComponent(),
+                    new PauseComponent(),
+                    new SettingsComponent())
             };
+
+            Scenario = new Scenario("Core Scenario");
         }
     }
 }
