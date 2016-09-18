@@ -95,12 +95,12 @@ namespace Rentitas
             return (T2) Get(typeof (T2));
         }
 
-        public bool Has<T2>() where T2 : T , new()
+        public bool Has<T2>() where T2 : T
         {
             return Has(typeof(T2));
         }
 
-        public Entity<T> Remove<T2>() where T2 : T, new()
+        public Entity<T> Remove<T2>() where T2 : T
         {
             return Remove(typeof(T2));
         }
@@ -130,6 +130,28 @@ namespace Rentitas
             }
 
             return _toStringCache;
+        }
+
+        public bool Is<T2>() where T2 : T, IFlag
+        {
+            return Has<T2>();
+        }
+
+        public Entity<T> Toggle<T2>() where T2 : T, IFlag, new()
+        {
+            var current = Is<T2>();
+            return Toggle<T2>(!current);
+        }
+        public Entity<T> Toggle<T2>(bool flag) where T2 : T, IFlag, new()
+        {
+            var current = Is<T2>();
+            if (current == flag) return this;
+
+            if (flag) Add<T2>();
+            else Remove<T2>();
+
+            return this;
+
         }
     }
 }

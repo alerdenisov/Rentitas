@@ -12,6 +12,7 @@ namespace Rentitas
         readonly HashSet<Entity<T>> _entities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
         readonly Stack<Entity<T>> _reusableEntities = new Stack<Entity<T>>();
         readonly HashSet<Entity<T>> _retainedEntities = new HashSet<Entity<T>>(EntityEqualityComparer<T>.Comparer);
+        readonly Dictionary<Type, Group<T>> _singletons = new Dictionary<Type, Group<T>>();
 
         int _creationIndex;
         Entity<T>[] _entitiesCache;

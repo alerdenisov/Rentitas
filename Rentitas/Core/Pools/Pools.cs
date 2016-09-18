@@ -33,7 +33,12 @@ namespace Rentitas
             _typedPools[type].Add(index);
         }
 
-        public IPool Get(string name)
+        public Pool<T> Get<T>(string name) where T : class, IComponent
+        {
+            return (Pool<T>) Get(name);
+        }
+
+        public IPool Get(string name) 
         {
             return _namedPools.ContainsKey(name) ? GetPool(_namedPools[name]) : null;
         }

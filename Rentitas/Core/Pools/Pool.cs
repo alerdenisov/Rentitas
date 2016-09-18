@@ -60,6 +60,15 @@ namespace Rentitas
                 stack.Push(component);
                 _componentPools.Add(type, stack);
                 _groupsForTypes.Add(type, new List<Group<T>>());
+
+
+                var isSingleton = component is ISingleton;
+                if (isSingleton)
+                {
+                    // TODO: Create auto single group
+                    var group = GetGroup(Matcher.AllOf(type));
+                    _singletons.Add(type, group);
+                }
             }
 
             _metaData = new PoolMeta(
@@ -86,6 +95,64 @@ namespace Rentitas
             _cachedUpdateGroupsComponentReplaced        = UpdateGroupsComponentReplaced;
             _cachedOnEntityReleased                     = OnEntityReleased;
 
+        }
+//        public T2 Get<T2>() where T2 : T, new()
+
+        public virtual Entity<T> GetSingle<T2>() where T2 : T, ISingleton
+        {
+            var type = typeof (T2);
+
+            // TODO: Create custom Exception type!
+            if (!_singletons.ContainsKey(type))
+                throw new Exception("Unknown type of single component. Be sure are you using right pool " + type);
+            
+            var group = _singletons[type];
+            return group.GetSingleEntity();
+        }
+
+        public bool Is<T2>() where T2 : T, ISingleton, IFlag
+        {
+            return GetSingle<T2>() != null;
+        }
+
+        public bool Toggle<T2>() where T2 : T, ISingleton, IFlag, new()
+        { 
+            var current = Is<T2>();
+            return Toggle<T2>(!current);
+        }
+
+        public bool Toggle<T2>(bool flag ) where T2: T, ISingleton, IFlag, new()
+        {
+            var current = Is<T2>();
+            if (current != flag)
+            {
+                if (flag) CreateEntity().Add<T2>();
+                else DestroyEntity(GetSingle<T2>());
+            }
+
+            return flag;
+
+        }
+
+        public virtual ISystem CreateSystem(ISystem system)
+        {
+            var reactiveSystem = system as IReactiveSystem<T>;
+            if (reactiveSystem != null)
+            {
+                return new ReactiveSystem<T>(this, reactiveSystem);
+            }
+            var multiReactiveSystem = system as IMultiReactiveSystem<T>;
+            if (multiReactiveSystem != null)
+            {
+                return new ReactiveSystem<T>(this, multiReactiveSystem);
+            }
+            var groupObserverSystem = system as IGroupObserverSystem<T>;
+            if (groupObserverSystem != null)
+            {
+                return new ReactiveSystem<T>(groupObserverSystem);
+            }
+
+            return system;
         }
 
         /// Creates a new entity or gets a reusable entity from the internal ObjectPool for entities.
