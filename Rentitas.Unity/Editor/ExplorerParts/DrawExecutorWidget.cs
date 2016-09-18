@@ -28,36 +28,30 @@ namespace Rentitas.Unity
             }
             else
             {
-                GUILayout.BeginHorizontal();
+                _scrollPoolTypes = GUILayout.BeginScrollView(_scrollPoolTypes);
+                GUILayout.EndScrollView();
+
+                GUI.BeginGroup(GUILayoutUtility.GetLastRect());
+                _drawPoolTypes.DrawWidget(explorer);
+                if (explorer.SelectedPoolType != null)
                 {
-                    _scrollPoolTypes = GUILayout.BeginScrollView(_scrollPoolTypes, false, true);
-                    {
-                    }
-                    GUILayout.EndScrollView();
+                    _drawComponentTypes.PoolType = explorer.SelectedPoolType;
+                    _drawComponentTypes.PoolRect = explorer.PoolRect;
+                    _drawComponentTypes.DrawWidget(explorer);
 
-                    GUI.BeginGroup(GUILayoutUtility.GetLastRect());
-                    _drawPoolTypes.DrawWidget(explorer);
-                    if (explorer.SelectedPoolType != null)
+                    if (explorer.SelectedComponentType != null)
                     {
-                        _drawComponentTypes.PoolType = explorer.SelectedPoolType;
-                        _drawComponentTypes.PoolRect = explorer.PoolRect;
-                        _drawComponentTypes.DrawWidget(explorer);
-
-                        if (explorer.SelectedComponentType != null)
+                        if (!explorer.SelectedPoolType.IsAssignableFrom(explorer.SelectedComponentType))
+                            explorer.SelectedComponentType = null;
+                        else
                         {
-                            if (!explorer.SelectedPoolType.IsAssignableFrom(explorer.SelectedComponentType))
-                                explorer.SelectedComponentType = null;
-                            else
-                            {
-                                _drawComponentFields.ComponentType = explorer.SelectedComponentType;
-                                _drawComponentFields.ComponentRect = explorer.ComponentRect;
-                                _drawComponentFields.DrawWidget(explorer);
-                            }
+                            _drawComponentFields.ComponentType = explorer.SelectedComponentType;
+                            _drawComponentFields.ComponentRect = explorer.ComponentRect;
+                            _drawComponentFields.DrawWidget(explorer);
                         }
                     }
-                    GUI.EndGroup();
                 }
-                GUILayout.EndHorizontal();
+                GUI.EndGroup();
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Rentitas.Unity
         {
 
             explorer.Executor.IsNotConfigurated = true;
-            var assembly = Assembly.GetAssembly(typeof(IComponent));//E.GetType());
+            var assembly = Assembly.GetAssembly(explorer.Executor.GetType());
             var poolTypes = assembly.GetTypes().Where(t => typeof(IComponent).IsAssignableFrom(t) && t.IsInterface && t != typeof(IComponent)).ToArray();
             var componentTypes = poolTypes.ToDictionary(
                 t => t,

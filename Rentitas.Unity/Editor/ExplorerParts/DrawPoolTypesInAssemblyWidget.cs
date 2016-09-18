@@ -48,7 +48,7 @@ namespace Rentitas.Unity
         private void SetupContext()
         {
             if (E == null) return;
-            _assembly = Assembly.GetAssembly(typeof (IComponent));//E.GetType());
+            _assembly = Assembly.GetAssembly(E.Executor.GetType());
             _types = _assembly.GetTypes().Where(t => typeof (IComponent).IsAssignableFrom(t) && t.IsInterface && t != typeof(IComponent));
             _typeNames = _types.ToDictionary(t => t, t => t.ToString().Split(new[] {'.'}).Last());
 
