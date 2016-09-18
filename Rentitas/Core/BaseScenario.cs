@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Policy;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace Rentitas
 {
     public class BaseScenario : IInitializeSystem, IExecuteSystem, IDeinitializeSystem, ICleanupSystem
     {
+        protected readonly List<ISetApplication> SetupApplicationSystems;
+        protected readonly List<ISetPools> SetupPoolsSystems;
         protected readonly List<IInitializeSystem> InitializeSystems;
         protected readonly List<IExecuteSystem> ExecuteSystems;
         protected readonly List<IDeinitializeSystem> DeinitializeSystems;
@@ -13,6 +16,8 @@ namespace Rentitas
 
         public BaseScenario(string name = "")
         {
+            SetupApplicationSystems = new List<ISetApplication>();
+            SetupPoolsSystems = new List<ISetPools>();
             InitializeSystems = new List<IInitializeSystem>();
             ExecuteSystems = new List<IExecuteSystem>();
             DeinitializeSystems = new List<IDeinitializeSystem>();
@@ -22,7 +27,25 @@ namespace Rentitas
         /// Adds the system instance to the systems list.
         public virtual BaseScenario Add(ISystem system)
         {
-            var reactiveSystem = system as IReactiveIntermalSystem;
+            var reactiveSystem = system as IReactiveInternalSystem;
+
+            var setupApplicationSystem = reactiveSystem != null
+                ? reactiveSystem.InternalSubsystem as ISetApplication
+                : system as ISetApplication;
+
+            if (setupApplicationSystem != null)
+            {
+                SetupApplicationSystems.Add(setupApplicationSystem);
+            }
+            
+            var setupPoolsSystem = reactiveSystem != null
+                ? reactiveSystem.InternalSubsystem as ISetPools
+                : system as ISetPools;
+
+            if (setupPoolsSystem != null)
+            {
+                SetupPoolsSystems.Add(setupPoolsSystem);
+            }
 
             var initializeSystem = reactiveSystem != null
                 ? reactiveSystem.InternalSubsystem as IInitializeSystem
@@ -60,6 +83,26 @@ namespace Rentitas
             return this;
         }
 
+        public virtual void SetPools(Pools pools)
+        {
+            for (int i = 0; i < SetupPoolsSystems.Count; i++)
+            {
+                SetupPoolsSystems[i].SetPools(pools);
+                SetupPoolsSystems.RemoveAt(i);
+                i--;
+            }
+        }
+
+        public virtual void SetApplication(IApplication app)
+        {
+            for (int i = 0; i < SetupApplicationSystems.Count; i++)
+            {
+                SetupApplicationSystems[i].SetApplication(app);
+                SetupApplicationSystems.RemoveAt(i);
+                i--;
+            }
+        }
+
         public virtual void Initialize()
         {
             for (int i = 0; i < InitializeSystems.Count; i++)
@@ -95,7 +138,7 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as IReactiveIntermalSystem)?.Activate();
+                (system as IReactiveInternalSystem)?.Activate();
                 (system as BaseScenario)?.ActivateReactiveSystems();
             }
         }
@@ -107,7 +150,7 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as IReactiveIntermalSystem)?.Deactivate();
+                (system as IReactiveInternalSystem)?.Deactivate();
                 (system as BaseScenario)?.DeactivateReactiveSystems();
             }
         }
@@ -118,9 +161,20 @@ namespace Rentitas
             for (int i = 0; i < ExecuteSystems.Count; i++)
             {
                 var system = ExecuteSystems[i];
-                (system as IReactiveIntermalSystem)?.Clear();
+                (system as IReactiveInternalSystem)?.Clear();
                 (system as BaseScenario)?.ClearReactiveSystems();
             }
+        }
+
+        public virtual void Remove(BaseScenario scenario)
+        {
+            scenario.ClearReactiveSystems();
+            scenario.Cleanup();
+            scenario.Deinitialize();
+            InitializeSystems.Remove(scenario as IInitializeSystem);
+            ExecuteSystems.Remove(scenario as IExecuteSystem);
+            DeinitializeSystems.Remove(scenario as IDeinitializeSystem);
+            CleanupSystems.Remove(scenario as ICleanupSystem);
         }
     }
 }

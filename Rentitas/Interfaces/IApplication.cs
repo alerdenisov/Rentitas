@@ -19,7 +19,9 @@
     public interface IApplication
     {
         Pools Pools { get; }
-        void RegisterKernel(IKernel kernel);
         BaseScenario MainScenario { get; }
+        void RegisterKernel(IKernel kernel);
+        void UnregisterKernel(IKernel kernelA);
+        void Execute();
     }
 }
