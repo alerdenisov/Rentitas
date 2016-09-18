@@ -2,7 +2,7 @@
 
 namespace Rentitas
 {
-    public interface IReactiveIntermalSystem
+    public interface IReactiveInternalSystem
     {
         ISystem InternalSubsystem { get; }
         void Activate();
@@ -15,7 +15,7 @@ namespace Rentitas
     /// e.g. a change of the position of an entity to update the gameObject.transform.position of the related gameObject.
     /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
     /// This will automatically wrap MySystem in a ReactiveSystem if it implements IReactiveSystem, IMultiReactiveSystem or IGroupObserverSystem.
-    public class ReactiveSystem<T> : IReactiveIntermalSystem, IExecuteSystem where T : class, IComponent
+    public class ReactiveSystem<T> : IReactiveInternalSystem, IExecuteSystem where T : class, IComponent
     {
 
         /// Returns the subsystem which will be managed by this instance of ReactiveSystem.
