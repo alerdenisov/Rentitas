@@ -13,5 +13,10 @@
         {
             _matcher = matcher;
         }
+
+        public override string ToString()
+        {
+            return "Group: " + Matcher.ToString();
+        }
     }
 }

@@ -10,11 +10,11 @@ namespace Rentitas
         /// Returns all collected entities. Call observer.ClearCollectedEntities() once you processed all entities.
         public HashSet<Entity<T>> collectedEntities => _collectedEntities;
 
-        private readonly HashSet<Entity<T>>        _collectedEntities;
-        private readonly Group<T>[]                _groups;
-        private readonly GroupEventType[]       _eventTypes;
-        private readonly Group<T>.GroupChanged     _addEntityCache;
-        private string                          _toStringCache;
+        private readonly HashSet<Entity<T>>         _collectedEntities;
+        private readonly Group<T>[]                 _groups;
+        private readonly GroupEventType[]           _eventTypes;
+        private readonly Group<T>.GroupChanged      _addEntityCache;
+        private string                              _toStringCache;
 
         /// Creates a GroupObserver and will collect changed entities based on the specified eventType.
         public GroupObserver(Group<T> group, GroupEventType eventType)
