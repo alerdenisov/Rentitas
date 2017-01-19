@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Rentitas
 {
@@ -23,6 +24,14 @@ namespace Rentitas
 
         Matcher()
         {
+        }
+
+        public override string ToString()
+        {
+            return $"Matcher: \n" +
+                   (AllOfTypes != null ? $"AllOf: {string.Join(", ", AllOfTypes.Select(t => t.ToString()).ToArray())} \n" : "") +
+                   (AnyOfTypes != null ? $"AnyOf: {string.Join(", ", AnyOfTypes.Select(t => t.ToString()).ToArray())} \n" : "") +
+                   (NoneOfTypes != null ? $"NonOf: {string.Join(", ", NoneOfTypes.Select(t => t.ToString()).ToArray())} \n" : "");
         }
 
         public bool Matches(IEntity entity)
