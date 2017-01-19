@@ -29,6 +29,7 @@ namespace Rentitas
         private readonly bool                           _clearAfterExecute;
         private readonly List<Entity<T>>                _buffer;
         private string                                  _toStringCache;
+        private bool                                    _isExecutable;
 
         /// Recommended way to create systems in general: pool.CreateSystem(new MySystem());
         public ReactiveSystem(Pool<T> pool, IReactiveSystem<T> subSystem) :
@@ -66,6 +67,8 @@ namespace Rentitas
 
             _observer = groupObserver;
             _buffer = new List<Entity<T>>();
+
+            _isExecutable = subSystem is IExecuteSystem;
         }
 
         static GroupObserver<T> CreateGroupObserver(Pool<T> pool, TriggerOnEvent[] triggers)
@@ -165,6 +168,8 @@ namespace Rentitas
                     }
                 }
             }
+
+            if(_isExecutable) ((IExecuteSystem)Subsystem).Execute();
         }
 
         public override string ToString()
