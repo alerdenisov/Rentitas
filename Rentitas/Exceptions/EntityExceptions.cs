@@ -96,7 +96,7 @@ namespace Rentitas
     public class PoolMetaDataException<T> : RentitasException where T : class, IComponent
     {
         public PoolMetaDataException(Pool<T> pool, PoolMeta poolMetaData) :
-            base("Invalid PoolMetaData for '" + pool + "'!\nExpected " + pool.TotalComponents + " componentName(s) but got " + poolMetaData.TotalComponents, null)
+            base("Invalid PoolMetaData for '" + pool + "'!\nExpected " + pool?.TotalComponents + " componentName(s) but got " + poolMetaData?.TotalComponents, null)
         {
         }
     }
