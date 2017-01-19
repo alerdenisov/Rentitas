@@ -1,39 +1,73 @@
-﻿namespace Rentitas
+﻿using System.Collections.Generic;
+using Rentitas.Unity;
+using UnityEngine;
+
+namespace Rentitas
 {
-    public class Application : IApplication
+    public abstract class Application : IApplication
     {
         public Pools Pools { get; }
 
-        public Application()
+        private Dictionary<IKernel, BaseScenario> _kernelScenarios;
+
+        protected Application()
         {
+            _kernelScenarios = new Dictionary<IKernel, BaseScenario>();
             Pools = new Pools();
             MainScenario = new BaseScenario("Main");
         }
 
-        public virtual void RegisterKernel(IKernel kernel)
+        public void RegisterKernel(IKernel kernel)
         {
-            kernel.Scenario.SetApplication(this);
-            foreach (var poolInterface in kernel.PoolInterfaces)
+            if (kernel.PoolInterfaces != null)
             {
-                Pools.Register(poolInterface);
+                foreach (var poolInterface in kernel.PoolInterfaces)
+                {
+                    Pools.Register(poolInterface);
+                }
             }
-            kernel.Scenario.SetPools(Pools);
 
-            MainScenario.Add(kernel.Scenario);
-            MainScenario.Initialize();
+            var scenario = kernel.SetupScenario(Pools);
+            _kernelScenarios.Add(kernel, scenario);
+
+            scenario.SetPools(Pools);
+
+            scenario.SetApplication(this);
+            MainScenario.Add(scenario);
+            scenario.Initialize();
         }
 
-        public virtual void UnregisterKernel(IKernel kernel)
+        public void UnregisterKernel(IKernel kernel)
         {
-            MainScenario.Remove(kernel.Scenario);
+            if (!_kernelScenarios.ContainsKey(kernel))
+            {
+                Debug.LogError("Unknown kernel! " + kernel);
+                return;
+            }
+            MainScenario.Remove(_kernelScenarios[kernel]);
+            _kernelScenarios.Remove(kernel);
         }
 
-        public void Execute()
+        public virtual void Execute()
         {
+            if(!IsStarted)
+                Start();
+
             MainScenario.Execute();
             MainScenario.Cleanup();
         }
 
-        public virtual BaseScenario MainScenario { get; private set; }
+        public virtual void Start()
+        {
+            IsStarted = true;
+        }
+
+        public bool IsStarted { get; private set; }
+
+        public BaseScenario MainScenario { get; }
+        public void Dispose()
+        {
+            MainScenario.Deinitialize();
+        }
     }
 }
