@@ -1,4 +1,6 @@
-﻿namespace Rentitas
+﻿using System;
+
+namespace Rentitas
 {
     /// <summary>
     /// 
@@ -16,7 +18,7 @@
     /// </summary>
 
 
-    public interface IApplication
+    public interface IApplication : IDisposable
     {
         Pools Pools { get; }
         BaseScenario MainScenario { get; }
