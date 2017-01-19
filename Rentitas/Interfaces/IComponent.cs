@@ -16,4 +16,9 @@
     {
         
     }
+
+    public interface IIndex<T> where T : struct
+    {
+        T GetIndex();
+    }
 }

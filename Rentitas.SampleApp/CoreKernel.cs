@@ -1,11 +1,11 @@
-﻿using Rentitas.Kernel;
+﻿using System;
+using Rentitas.Kernel;
 using Rentitas.Unity;
 
 namespace Rentitas.SampleApp
 {
     public class CoreKernel : IKernel
     {
-        public BaseScenario Scenario { get; private set; }
         public IPool[] PoolInterfaces { get; private set; }
 
         public CoreKernel()
@@ -19,7 +19,11 @@ namespace Rentitas.SampleApp
                     new SettingsComponent())
             };
 
-            Scenario = new Scenario("Core Scenario");
+        }
+
+        public BaseScenario SetupScenario(Pools pools)
+        {
+            return new Scenario("Core Scenario");
         }
     }
 }
