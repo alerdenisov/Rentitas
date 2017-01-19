@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Rentitas
 {
@@ -71,6 +72,11 @@ namespace Rentitas
                 throw new IncorrectIndexOfPool(index);
 
             return _poolRepository[index];
+        }
+
+        public IPool[] GetPools()
+        {
+            return _poolRepository.ToArray();
         }
     }
 }
