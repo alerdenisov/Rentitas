@@ -18,9 +18,57 @@ namespace Rentitas.Unity.VisualDebugging
     {
         public static AvgResetInterval AvgResetInterval = AvgResetInterval.Never;
 
+        public int TotalInitializeSystemsCount
+        {
+            get
+            {
+                var total = 0;
+                foreach (var system in InitializeSystems)
+                {
+                    var debugSystems = system as DebugScenario;
+                    if (debugSystems != null)
+                    {
+                        total += debugSystems.TotalInitializeSystemsCount;
+                    }
+                    else
+                    {
+                        total += 1;
+                    }
+                }
+                return total;
+            }
+        }
+
+        public int TotalExecuteSystemsCount
+        {
+            get
+            {
+                var total = 0;
+                foreach (var system in ExecuteSystems)
+                {
+                    var debugSystems = system as DebugScenario;
+                    if (debugSystems != null)
+                    {
+                        total += debugSystems.TotalExecuteSystemsCount;
+                    }
+                    else
+                    {
+                        total += 1;
+                    }
+                }
+                return total;
+            }
+        }
+
         public GameObject Container => _container.gameObject;
         public string Name => _name;
-        public bool IsPaused => _paused;
+        public bool IsPaused { get; set; }
+        public int InitializeSystemsCount => InitializeSystems.Count;
+        public int ExecuteSystemsCount => ExecuteSystems.Count;
+        public int TotalSystemsCount => _systems.Count;
+        public double TotalDuration => _totalDuration;
+        public SystemInfo[] InitializeSystemInfos => _initializeSystemInfos.ToArray();
+        public SystemInfo[] ExecuteSystemInfos => _executeSystemInfos.ToArray();
 
         readonly List<ISystem> _systems;
         readonly Transform _container;
@@ -29,7 +77,6 @@ namespace Rentitas.Unity.VisualDebugging
         readonly Stopwatch _stopwatch;
         readonly string _name;
         double _totalDuration;
-        bool _paused;
 
         public DebugScenario(string name = "Systems") : base()
         {
