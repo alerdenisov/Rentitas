@@ -98,6 +98,17 @@ namespace Rentitas
         }
 //        public T2 Get<T2>() where T2 : T, new()
 
+        public virtual Entity<T> NeedSingle<T2>() where T2 : T, ISingleton, new()
+        {
+            return GetSingle<T2>() ?? CreateEntity().Add<T2>();
+        }
+
+        public virtual T2 Get<T2>() where T2 : class, T, ISingleton
+        {
+            var entity = GetSingle<T2>();
+            return entity?.Get<T2>();
+        }
+
         public virtual Entity<T> GetSingle<T2>() where T2 : T, ISingleton
         {
             var type = typeof (T2);
@@ -136,6 +147,9 @@ namespace Rentitas
 
         public virtual ISystem CreateSystem(ISystem system)
         {
+            var setPoolSystem = system as ISetPool<T>;
+            setPoolSystem?.SetPool(this);
+
             var reactiveSystem = system as IReactiveSystem<T>;
             if (reactiveSystem != null)
             {
@@ -151,6 +165,7 @@ namespace Rentitas
             {
                 return new ReactiveSystem<T>(groupObserverSystem);
             }
+
 
             return system;
         }
