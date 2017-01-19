@@ -30,10 +30,14 @@ namespace Rentitas
         public void RemoveAllComponents()
         {
             _toStringCache = null;
-            foreach (var key in _poolMeta.ComponentTypes)
+            foreach (var key in  _components.Keys.ToArray())
             {
-                ReplaceInstance(key, default(T));
+                ReplaceInstance(key, null);
             }
+//            foreach (var key in _poolMeta.ComponentTypes)
+//            {
+//                ReplaceInstance(key, default(T));
+//            }
         }
 
         /// Returns the componentPool for the specified component index.
