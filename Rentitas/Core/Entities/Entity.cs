@@ -69,7 +69,7 @@ namespace Rentitas
             return _componentTypesCache;
         }
 
-        public Entity<T> Add<T2>(Func<T2,T2> mod = null) where T2 : T, new()
+        public Entity<T> Add<T2>(Action<T2> mod = null) where T2 : T, new()
         {
             var comp = CreateComponent<T2>();
             mod?.Invoke(comp);
@@ -90,7 +90,7 @@ namespace Rentitas
             return _components[componentType];
         }
 
-        public T2 Get<T2>() where T2 : T, new()
+        public T2 Get<T2>() where T2 : T
         {
             return (T2) Get(typeof (T2));
         }
@@ -100,12 +100,17 @@ namespace Rentitas
             return Has(typeof(T2));
         }
 
+        public T2 Need<T2>() where T2 : T, new()
+        {
+            return Has<T2>() ? Get<T2>() : CreateComponent<T2>();
+        }
+
         public Entity<T> Remove<T2>() where T2 : T
         {
             return Remove(typeof(T2));
         }
 
-        public Entity<T> Replace<T2>(Func<T2, T2> mod = null) where T2 : T, new()
+        public Entity<T> Replace<T2>(Action<T2> mod = null) where T2 : T, new()
         {
             var comp = CreateComponent<T2>();
             mod?.Invoke(comp);
@@ -113,10 +118,15 @@ namespace Rentitas
             return this;
         }
 
-        public Entity<T> ReplaceInstance<T2>(T2 component) where T2 : T, new()
+        public Entity<T> ReplaceInstance<T2>(T2 component) where T2 : T
         {
             return ReplaceInstance(typeof(T2), component);
         }
+
+        public Entity<T> SetInstance<T2>(T2 component) where T2 : T
+        {
+            return Has<T2>() ? ReplaceInstance(component) : AddInstance(component);
+        } 
 
         public override string ToString()
         {
