@@ -7,9 +7,14 @@
     public class TestComponentB : ITestPool { }
     public class TestComponentC : ITestPool { }
 
-    public class TestNameComponent : ITestSecondPool
+    public class NameTestComponent : ITestSecondPool
     {
         public string Name;
+    }
+
+    public class IdTestComponent : ITestSecondPool
+    {
+        public int Id;
     }
 
 }

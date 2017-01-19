@@ -1,4 +1,5 @@
-﻿using Rentitas.Tests.Extra;
+﻿using System;
+using Rentitas.Tests.Extra;
 
 namespace Rentitas.Tests
 {
@@ -32,14 +33,17 @@ namespace Rentitas.Tests
             var subSystem = new ReactiveSubSystemSpy(Matcher.AllOf(typeof(TestComponentA)), GroupEventType.OnEntityAdded);
             ReactiveSystem = new ReactiveSystem<ITestPool>(Pool, subSystem);
 
-            Scenario = new BaseScenario("Test A")
+            PoolInterfaces = new IPool[] { Pool };
+        }
+
+        public BaseScenario SetupScenario(Pools pools)
+        {
+            return new BaseScenario("Test A")
                 .Add(InitializeSystem)
                 .Add(DeinitializeSystem)
                 .Add(ExecuteSystem)
                 .Add(CleanupSystem)
                 .Add(ReactiveSystem);
-
-            PoolInterfaces = new IPool[] { Pool };
         }
     }
 
@@ -55,13 +59,16 @@ namespace Rentitas.Tests
         public TestKernelB()
         {
             SecondCore = new Pool<ITestPool>("SecondCore", new TestComponentA());
-            SecondPool = new Pool<ITestSecondPool>(new TestNameComponent());
+            SecondPool = new Pool<ITestSecondPool>(new NameTestComponent());
             ApplicationSystem = new ApplicationSystemSpy();
             PoolsSystem = new PoolsSystemSpy();
 
-            Scenario = new BaseScenario("Test A").Add(ApplicationSystem).Add(PoolsSystem);
-
             PoolInterfaces = new IPool[] {SecondCore, SecondPool};
+        }
+
+        public BaseScenario SetupScenario(Pools pools)
+        {
+            return new BaseScenario("Test A").Add(ApplicationSystem).Add(PoolsSystem);
         }
     }
 }

@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Rentitas.SampleApp;
 using Rentitas.Tests.Extra;
+using UnityEngine;
 
 namespace Rentitas.Tests.Applications
 {
@@ -110,6 +111,7 @@ namespace Rentitas.Tests.Applications
         public void kernel_systems_should_be_deinitialized_after_unregistration()
         {
             var deinit = kernelA.DeinitializeSystem;
+            app.RegisterKernel(kernelA);
             Assert.AreEqual(deinit.didDeinitialize, 0);
             app.UnregisterKernel(kernelA);
             Assert.AreEqual(deinit.didDeinitialize, 1);
@@ -165,11 +167,11 @@ namespace Rentitas.Tests.Applications
             app.Pools.Get<ITestPool>().CreateEntity().Add<TestComponentA>();
             app.Execute();
             Assert.AreEqual(2, s.didExecute);
-            Assert.AreEqual(0, s.didCleanup);
+            Assert.AreEqual(2, s.didCleanup);
             Assert.AreEqual(0, s.didDeinitialize);
 
             app.UnregisterKernel(kernelA);
-            Assert.AreEqual(1, s.didCleanup);
+            Assert.AreEqual(3, s.didCleanup);
             Assert.AreEqual(1, s.didDeinitialize);
 
 
