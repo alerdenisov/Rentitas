@@ -9,11 +9,9 @@ namespace Rentitas.Unity.VisualDebugging
         public override void OnInspectorGUI()
         {
             if (UnityEngine.Application.isPlaying)
-                base.OnInspectorGUI();
-            else
-            {
-                
-            }
+                return;
+
+            base.OnInspectorGUI();
         }
     }
 }
