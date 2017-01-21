@@ -1,9 +1,6 @@
-﻿#if UNITY_EDITOR
-using Rentitas.Unity.VisualDebugging;
+﻿using Rentitas.Unity.VisualDebugging;
 using ReUI.Api;
 using UnityEngine;
-
-#endif
 
 namespace Rentitas.Unity
 {
