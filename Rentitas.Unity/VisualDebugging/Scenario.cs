@@ -1,5 +1,4 @@
 ﻿using Rentitas.Unity.VisualDebugging;
-using ReUI.Api;
 using UnityEngine;
 
 namespace Rentitas.Unity
@@ -18,9 +17,9 @@ namespace Rentitas.Unity
                 return;
 
             var system = ExecuteSystems[_currentIndex];
-            if (system is ReactiveSystem<IUIPool>)
+            if (system is IReactiveInternalSystem)
             {
-                Debug.Log("Execute system " + ((system as ReactiveSystem<IUIPool>).InternalSubsystem).GetType());
+                Debug.Log("Execute system " + ((system as IReactiveInternalSystem).InternalSubsystem).GetType());
             }
             else
             {
