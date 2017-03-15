@@ -1,7 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.Policy;
-using JetBrains.Annotations;
-using UnityEngine;
 
 namespace Rentitas
 {

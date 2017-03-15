@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Rentitas.Unity;
-using UnityEngine;
 
 namespace Rentitas
 {
@@ -41,7 +39,6 @@ namespace Rentitas
         {
             if (!_kernelScenarios.ContainsKey(kernel))
             {
-                Debug.LogError("Unknown kernel! " + kernel);
                 return;
             }
             MainScenario.Remove(_kernelScenarios[kernel]);
