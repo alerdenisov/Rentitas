@@ -26,8 +26,6 @@ namespace Rentitas.Tests
         [Test]
         public void clears_all_component_pools()
         {
-            Debug.Log(pool.ComponentPools);
-            Debug.Log(string.Join(", ", pool.ComponentPools.Keys.Select(t => t.ToString()).ToArray()));
             Assert.AreEqual(1, pool.ComponentPools[typeof(TestComponentA)].Count);
             Assert.AreEqual(1, pool.ComponentPools[typeof(TestComponentB)].Count);
 

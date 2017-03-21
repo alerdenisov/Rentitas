@@ -29,6 +29,16 @@ namespace Rentitas
         {
             return _list.Where(i => i != null).ToArray();
         }
+
+        public TComponent[] Build<TComponent>() where TComponent : IComponent
+        {
+            if (!typeof(TComponent).IsAssignableFrom(typeof(TPool)))
+            {
+                throw new ArgumentException("TComponent type isn't assignable from TPool");
+            }
+
+            return _list.Where(i => i != null).OfType<TComponent>().ToArray();
+        }
     }
     public static class RentitasUtility
     {

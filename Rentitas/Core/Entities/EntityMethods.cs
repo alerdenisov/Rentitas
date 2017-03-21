@@ -159,7 +159,6 @@ namespace Rentitas
                     }
 
                     GetComponentPool(type).Push(previousComponent);
-
                 }
                 else
                 {

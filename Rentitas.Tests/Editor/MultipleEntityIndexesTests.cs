@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace Rentitas.Tests.Indexes.Multiple
 {
-    [TestFixture]
     public class BaseIndexesContext 
     {
         protected Pool<ITestSecondPool> Pool;
@@ -26,7 +25,6 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
-    [TestFixture]
     public class IndexWithNameContext : BaseIndexesContext
     {
         protected const string Key = "Max";
@@ -40,8 +38,7 @@ namespace Rentitas.Tests.Indexes.Multiple
             Entity2 = Pool.CreateEntity().Add<NameTestComponent>(n => n.Name = Key);
         }
     }
-    
-    [TestFixture] 
+
     public class DeactivatedIndexContext : IndexWithNameContext
     {
         [SetUp]
@@ -50,8 +47,6 @@ namespace Rentitas.Tests.Indexes.Multiple
             Index.Deactivate();
         }
     }
-
-    [TestFixture]
     public class ReactivatedIndexContext : DeactivatedIndexContext
     {
         [SetUp]
@@ -61,7 +56,6 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
-    [TestFixture]
     public class MultipleComponentIndex : ReactivatedIndexContext
     {
         protected Entity<ITestSecondPool> Entity3 = null;
@@ -107,6 +101,7 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
+    [TestFixture]
     public class BaseIndexTests : BaseIndexesContext
     {
         [Test]
@@ -117,6 +112,7 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
+    [TestFixture]
     public class KeyIndexTests : IndexWithNameContext
     {
         [Test]
@@ -157,6 +153,7 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
+    [TestFixture]
     public class DeactivatedIndexTests : DeactivatedIndexContext
     {
         [Test]
@@ -175,6 +172,7 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
+    [TestFixture]
     public class ReactivatedIndexTests : ReactivatedIndexContext
     {
         [Test]
@@ -203,6 +201,7 @@ namespace Rentitas.Tests.Indexes.Multiple
         }
     }
 
+    [TestFixture]
     public class MultipleComponentIndexTests : MultipleComponentIndex
     {
         [Test]

@@ -4,7 +4,6 @@ using Rentitas.Tests.Extra;
 
 namespace Rentitas.Tests
 {
-    [TestFixture]
     public class BaseSystemsContext
     {
         protected Pool<ITestPool> pool;
@@ -25,7 +24,6 @@ namespace Rentitas.Tests
         }
     }
 
-    [TestFixture]
     public class ScenarioContext : BaseSystemsContext
     {
         protected BaseScenario scenario;

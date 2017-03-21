@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace Rentitas.Tests
 {
-    [TestFixture]
     public class EntityContext
     {
         protected TestComponentA refA;
@@ -59,8 +58,6 @@ namespace Rentitas.Tests
             Assert.IsFalse(e.HasAny(typeof(TestComponentA)));
         }
     }
-
-    [TestFixture]
     public class EventDispatchContext : EntityContext
     {
         protected int did;
@@ -71,8 +68,6 @@ namespace Rentitas.Tests
             did = 0;
         }
     }
-
-    [TestFixture]
     public class AfterComponentAddedContext : EntityContext
     {
         [SetUp]
@@ -82,8 +77,6 @@ namespace Rentitas.Tests
         }
 
     }
-
-    [TestFixture]
     public class EntityCacheContext : AfterComponentAddedContext
     {
         protected IComponent[] cache;
@@ -98,7 +91,6 @@ namespace Rentitas.Tests
     }
 
 
-    [TestFixture]
     public class WhenAddingAnotherComponentContext : AfterComponentAddedContext
     {
         [SetUp]
@@ -109,6 +101,7 @@ namespace Rentitas.Tests
     }
 
 
+    [TestFixture]
     public class EntityTests : EntityContext
     {
         [Test]
@@ -179,6 +172,7 @@ namespace Rentitas.Tests
 
     }
 
+    [TestFixture]
     public class EntityAfterComponentAdded : AfterComponentAddedContext
     {
         [Test]
@@ -271,6 +265,7 @@ namespace Rentitas.Tests
         }
     }
 
+    [TestFixture]
     public class EntityWhenAddingAnotherComponentTest : WhenAddingAnotherComponentContext
     {
         [Test]
@@ -305,6 +300,7 @@ namespace Rentitas.Tests
         }
     }
 
+    [TestFixture]
     public class EntityEventsTests: EventDispatchContext
     {
         [Test]
@@ -493,6 +489,7 @@ namespace Rentitas.Tests
         
     }
 
+    [TestFixture]
     public class EntityReferencesCountingTests : EntityContext
     {
         [Test]
@@ -527,6 +524,7 @@ namespace Rentitas.Tests
         }
     }
 
+    [TestFixture]
     public class EntityInternalCaching : EntityCacheContext
     {
         [Test]

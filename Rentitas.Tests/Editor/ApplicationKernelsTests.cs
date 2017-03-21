@@ -1,12 +1,8 @@
-﻿using Rentitas.Tests;
-using NUnit.Framework;
-using Rentitas.SampleApp;
+﻿using NUnit.Framework;
 using Rentitas.Tests.Extra;
-using UnityEngine;
 
 namespace Rentitas.Tests.Applications
 {
-    [TestFixture]
     public class BaseApplicationContext
     {
         protected IApplication app;
@@ -18,7 +14,6 @@ namespace Rentitas.Tests.Applications
         }
     }
 
-    [TestFixture]
     public class KernelApplicationContenxt : BaseApplicationContext
     {
         protected TestKernelA kernelA;
@@ -51,6 +46,7 @@ namespace Rentitas.Tests.Applications
         }
     }
 
+    [TestFixture]
     public class ApplicationKernelsTests : BaseApplicationContext
     {
         [Test]
@@ -66,6 +62,7 @@ namespace Rentitas.Tests.Applications
         }
     }
 
+    [TestFixture]
     public class KernelTests : KernelApplicationContenxt
     {
         [Test]
@@ -118,6 +115,7 @@ namespace Rentitas.Tests.Applications
         }
     }
 
+    [TestFixture]
     public class TwoKernelsTest : BothKernelsContext
     {
         [Test]
@@ -181,6 +179,7 @@ namespace Rentitas.Tests.Applications
         }
     }
 
+    [TestFixture]
     public class RegisteredKernelsTest : RegisteredKernelsContext
     {
         [Test]

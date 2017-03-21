@@ -20,11 +20,17 @@ namespace Rentitas.Caching
             _cache.Push(list);
         }
 
+        public static T GetGeneric<T>() where T : new() { return _cache.Get<T>(); }
+        public static void PushGeneric<T>(T instance) where T : new() { _cache.Push(instance); }
+
         public static List<Type> GetTypeList() { return _cache.Get<List<Type>>(); }
         public static void PushTypeList(List<Type> list) { list.Clear(); _cache.Push(list); }
 
         public static HashSet<Type> GetTypeHashSet() { return _cache.Get<HashSet<Type>>(); }
         public static void PushTypeHashSet(HashSet<Type> hash) { hash.Clear(); _cache.Push(hash); }
+
+        public static HashSet<T> GetGenericHashSet<T>() { return _cache.Get<HashSet<T>>(); }
+        public static void PushGenericHashSet<T>(HashSet<T> hash) { hash.Clear(); _cache.Push(hash); }
 
         public static List<T> GetComponentList<T>()
             where T : IComponent

@@ -3,7 +3,6 @@ using Rentitas;
 
 namespace Rentitas.Tests.Indexes
 {
-    [TestFixture]
     public class BaseIndexesContext 
     {
         protected Pool<ITestSecondPool> Pool;
@@ -25,7 +24,6 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
-    [TestFixture]
     public class IndexWithNameContext : BaseIndexesContext
     {
         protected const string Key = "Max";
@@ -37,8 +35,7 @@ namespace Rentitas.Tests.Indexes
             Entity = Pool.CreateEntity().Add<NameTestComponent>(n => n.Name = Key);
         }
     }
-    
-    [TestFixture] 
+
     public class DeactivatedIndexContext : IndexWithNameContext
     {
         [SetUp]
@@ -48,7 +45,6 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
-    [TestFixture]
     public class ReactivatedIndexContext : DeactivatedIndexContext
     {
         [SetUp]
@@ -58,6 +54,7 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
+    [TestFixture]
     public class BaseIndexTests : BaseIndexesContext
     {
         [Test]
@@ -82,6 +79,7 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
+    [TestFixture]
     public class KeyIndexTests : IndexWithNameContext
     {
         [Test]
@@ -139,6 +137,7 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
+    [TestFixture]
     public class DeactivatedIndexTests : DeactivatedIndexContext
     {
         [Test]
@@ -156,6 +155,7 @@ namespace Rentitas.Tests.Indexes
         }
     }
 
+    [TestFixture]
     public class ReactivatedIndexTests : ReactivatedIndexContext
     {
         [Test]
