@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentitas", "Rentitas.csproj", "{AF188461-B664-408E-B988-5B27641A79C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentitas.Unity", "..\Rentitas.Unity\Rentitas.Unity.csproj", "{3C2740BA-C8A0-481D-BD85-E15107692EBC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentitas.Unity.Editor", "..\Rentitas.Unity.Editor\Rentitas.Unity.Editor.csproj", "{BFCD9AF2-F778-4E21-A73C-E58158F042E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rentitas.Tests", "..\Rentitas.Tests\Rentitas.Tests.csproj", "{8EAB6602-4B52-4831-B531-45E8C8F47916}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF188461-B664-408E-B988-5B27641A79C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF188461-B664-408E-B988-5B27641A79C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF188461-B664-408E-B988-5B27641A79C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF188461-B664-408E-B988-5B27641A79C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C2740BA-C8A0-481D-BD85-E15107692EBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C2740BA-C8A0-481D-BD85-E15107692EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C2740BA-C8A0-481D-BD85-E15107692EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C2740BA-C8A0-481D-BD85-E15107692EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFCD9AF2-F778-4E21-A73C-E58158F042E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFCD9AF2-F778-4E21-A73C-E58158F042E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFCD9AF2-F778-4E21-A73C-E58158F042E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFCD9AF2-F778-4E21-A73C-E58158F042E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EAB6602-4B52-4831-B531-45E8C8F47916}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EAB6602-4B52-4831-B531-45E8C8F47916}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EAB6602-4B52-4831-B531-45E8C8F47916}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EAB6602-4B52-4831-B531-45E8C8F47916}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

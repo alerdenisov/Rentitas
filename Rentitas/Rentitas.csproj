@@ -1,0 +1,98 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AF188461-B664-408E-B988-5B27641A79C2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>Rentitas</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Rentitas</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Caching\ObjectCache.cs" />
+    <Compile Include="Caching\ObjectPool.cs" />
+    <Compile Include="Caching\RentitasCache.cs" />
+    <Compile Include="Core\Application\Application.cs" />
+    <Compile Include="Core\BaseScenario.cs" />
+    <Compile Include="Core\Entities\Entity.cs" />
+    <Compile Include="Core\Entities\EntityEqualityComparer.cs" />
+    <Compile Include="Core\Entities\EntityEvents.cs" />
+    <Compile Include="Core\Entities\EntityFields.cs" />
+    <Compile Include="Core\Entities\EntityMethods.cs" />
+    <Compile Include="Core\Entities\EntityOwner.cs" />
+    <Compile Include="Core\Groups\Group.cs" />
+    <Compile Include="Core\Groups\GroupEvents.cs" />
+    <Compile Include="Core\Groups\GroupEventType.cs" />
+    <Compile Include="Core\Groups\GroupFields.cs" />
+    <Compile Include="Core\Groups\GroupMethods.cs" />
+    <Compile Include="Core\Groups\GroupOvserver.cs" />
+    <Compile Include="Core\Matchers\Matcher.cs" />
+    <Compile Include="Core\Matchers\MatcherEquals.cs" />
+    <Compile Include="Core\Matchers\MatcherFields.cs" />
+    <Compile Include="Core\Matchers\MatcherMethods.cs" />
+    <Compile Include="Core\Matchers\TriggerOnEvent.cs" />
+    <Compile Include="Core\Pools\Pool.cs" />
+    <Compile Include="Core\Pools\PoolEvents.cs" />
+    <Compile Include="Core\Pools\PoolFactory.cs" />
+    <Compile Include="Core\Pools\PoolFields.cs" />
+    <Compile Include="Core\Pools\PoolMethods.cs" />
+    <Compile Include="Core\Pools\Pools.cs" />
+    <Compile Include="Core\ReactiveSystem.cs" />
+    <Compile Include="Exceptions\EntityExceptions.cs" />
+    <Compile Include="Exceptions\PoolsExceptions.cs" />
+    <Compile Include="Extensions\MatcherExtensions.cs" />
+    <Compile Include="Helpers\RentitasUtility.cs" />
+    <Compile Include="Interfaces\IApplication.cs" />
+    <Compile Include="Interfaces\IComponent.cs" />
+    <Compile Include="Interfaces\IEntity.cs" />
+    <Compile Include="Interfaces\IEntityIndex.cs" />
+    <Compile Include="Interfaces\IKernel.cs" />
+    <Compile Include="Interfaces\IMatcher.cs" />
+    <Compile Include="Interfaces\IPool.cs" />
+    <Compile Include="Interfaces\Systems\ICleanupSystem.cs" />
+    <Compile Include="Interfaces\Systems\IDeinitializeSystem.cs" />
+    <Compile Include="Interfaces\Systems\IExecuteSystem.cs" />
+    <Compile Include="Interfaces\Systems\IInitializeSystem.cs" />
+    <Compile Include="Interfaces\Systems\IReactiveSystem.cs" />
+    <Compile Include="Interfaces\Systems\ISetApplication.cs" />
+    <Compile Include="Interfaces\Systems\ISetPool.cs" />
+    <Compile Include="Interfaces\Systems\ISystem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Kernel\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
