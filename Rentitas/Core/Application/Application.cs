@@ -62,6 +62,7 @@ namespace Rentitas
         public bool IsStarted { get; private set; }
 
         public BaseScenario MainScenario { get; }
+
         public void Dispose()
         {
             MainScenario.Deinitialize();

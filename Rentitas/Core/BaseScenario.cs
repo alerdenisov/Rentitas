@@ -212,12 +212,22 @@ namespace Rentitas
 
         public void Disable()
         {
+            foreach (var disableSystem in DisableSystems)
+            {
+                disableSystem.Disable();
+            }
+
             enabled = false;
             DeactivateReactiveSystems();
         }
 
         public void Enable()
         {
+            foreach (var enableSystem in EnableSystems)
+            {
+                enableSystem.Enable();
+            }
+            
             enabled = true;
             ActivateReactiveSystems();
         }
