@@ -101,7 +101,10 @@ namespace Rentitas
 
         public T2 Need<T2>() where T2 : T, new()
         {
-            return Has<T2>() ? Get<T2>() : CreateComponent<T2>();
+            if (Has<T2>())
+                return Get<T2>();
+            else
+                return CreateComponent<T2>();
         }
 
         public Entity<T> Remove<T2>() where T2 : T

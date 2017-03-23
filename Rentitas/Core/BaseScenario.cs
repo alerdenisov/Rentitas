@@ -4,12 +4,16 @@ namespace Rentitas
 {
     public class BaseScenario : IInitializeSystem, IExecuteSystem, IDeinitializeSystem, ICleanupSystem
     {
+        private bool enabled;
+
         protected readonly List<ISetApplication> SetupApplicationSystems;
         protected readonly List<ISetPools> SetupPoolsSystems;
         protected readonly List<IInitializeSystem> InitializeSystems;
         protected readonly List<IExecuteSystem> ExecuteSystems;
         protected readonly List<IDeinitializeSystem> DeinitializeSystems;
         protected readonly List<ICleanupSystem> CleanupSystems;
+        protected readonly List<IEnableSystem> EnableSystems;
+        protected readonly List<IDisableSystem> DisableSystems;
 
         public BaseScenario(string name = "")
         {
@@ -19,6 +23,10 @@ namespace Rentitas
             ExecuteSystems = new List<IExecuteSystem>();
             DeinitializeSystems = new List<IDeinitializeSystem>();
             CleanupSystems = new List<ICleanupSystem>();
+            EnableSystems = new List<IEnableSystem>();
+            DisableSystems = new List<IDisableSystem>();
+
+            enabled = true;
         }
 
         /// Adds the system instance to the systems list.
@@ -77,6 +85,24 @@ namespace Rentitas
                 DeinitializeSystems.Add(deinitializeSystem);
             }
 
+            var enableSystem = reactiveSystem != null
+                ? reactiveSystem.InternalSubsystem as IEnableSystem
+                : system as IEnableSystem;
+
+            if (enableSystem != null)
+            {
+                EnableSystems.Add(enableSystem);
+            }
+
+            var disableSystem = reactiveSystem != null
+                ? reactiveSystem.InternalSubsystem as IDisableSystem
+                : system as IDisableSystem;
+
+            if (disableSystem != null)
+            {
+                DisableSystems.Add(disableSystem);
+            }
+
             return this;
         }
 
@@ -110,6 +136,11 @@ namespace Rentitas
 
         public virtual void Execute()
         {
+            if (!enabled)
+            {
+                return;
+            }
+
             for (int i = 0; i < ExecuteSystems.Count; i++)
                 ExecuteSystems[i].Execute();
         }
@@ -123,6 +154,11 @@ namespace Rentitas
         /// Calls Cleanup() on all ICleanupSystem, ReactiveSystem and other nested Systems instances in the order you added them.
         public virtual void Cleanup()
         {
+            if (!enabled)
+            {
+                return;
+            }
+
             for (int i = 0; i < CleanupSystems.Count; i++)
             {
                 CleanupSystems[i].Cleanup();
@@ -172,6 +208,18 @@ namespace Rentitas
             ExecuteSystems.Remove(scenario as IExecuteSystem);
             DeinitializeSystems.Remove(scenario as IDeinitializeSystem);
             CleanupSystems.Remove(scenario as ICleanupSystem);
+        }
+
+        public void Disable()
+        {
+            enabled = false;
+            DeactivateReactiveSystems();
+        }
+
+        public void Enable()
+        {
+            enabled = true;
+            ActivateReactiveSystems();
         }
     }
 }

@@ -81,6 +81,8 @@
     <Compile Include="Interfaces\IPool.cs" />
     <Compile Include="Interfaces\Systems\ICleanupSystem.cs" />
     <Compile Include="Interfaces\Systems\IDeinitializeSystem.cs" />
+    <Compile Include="Interfaces\Systems\IDisableSystem.cs" />
+    <Compile Include="Interfaces\Systems\IEnableSystem.cs" />
     <Compile Include="Interfaces\Systems\IExecuteSystem.cs" />
     <Compile Include="Interfaces\Systems\IInitializeSystem.cs" />
     <Compile Include="Interfaces\Systems\IReactiveSystem.cs" />
