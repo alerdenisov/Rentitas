@@ -42,7 +42,7 @@ namespace Rentitas
                     groupChangedEvent?.Invoke(groups[i], entity, type, component);
                 }
 
-                RentitasCache.PushGroupChangedList(events);
+                RentitasCache.PushGroupChangedList<T>(events);
             }
         }
 

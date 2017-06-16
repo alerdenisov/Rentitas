@@ -54,7 +54,7 @@ namespace Rentitas.Unity
             _stepper.gameObject.SetActive(false);
         }
     }
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !RENTITAS_DISABLE_DEBUG
     public class Scenario : DebugScenario
     {
 #else
